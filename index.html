@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: blob:; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' https://api.vk.com https://vk.com https://vk.ru; object-src 'none'; base-uri 'self'; form-action 'self'; worker-src 'none'">
+    <meta name="referrer" content="no-referrer">
+    <title>Арена Шиноби: Тактический Драфт 5×5</title>
+    <link rel="stylesheet" href="css/game.css">
+    <meta name="theme-color" content="#0b1118">
+</head>
+<body class="flex flex-col relative app-booting app-ui" data-ui-version="72" data-r18-phase="hub" data-app-phase="hub" data-mobile-version="67" data-tutorial-ui-version="70" data-layout-version="71">
+
+    <div id="app-boot" class="app-boot" role="status" aria-live="polite" aria-label="Запуск игры">
+        <div class="app-boot-card">
+            <div class="app-boot-mark" aria-hidden="true">忍</div>
+            <span class="app-boot-brand">АРЕНА ШИНОБИ</span>
+            <strong id="app-boot-title">ПОДГОТОВКА АРЕНЫ</strong>
+            <p id="app-boot-status">Загружаем бойцов и правила матча…</p>
+            <div class="app-boot-progress" aria-hidden="true"><i></i><i></i><i></i></div>
+            <button id="app-boot-retry" class="hidden" type="button">ПОВТОРИТЬ ЗАПУСК</button>
+        </div>
+    </div>
+    <noscript><div class="app-noscript">Для запуска игры требуется JavaScript. Включите его и обновите страницу.</div></noscript>
+
+
+    <div id="bg-overlay"></div>
+    <canvas id="chakra-canvas"></canvas>
+    <div id="shockwave-fx"></div>
+
+    <header class="command-header r57-header">
+        <div class="command-brand r57-brand">
+            <div class="command-emblem" aria-hidden="true"><span>忍</span><i></i></div>
+            <div class="command-brand-copy">
+                <span class="command-overline">ТАКТИЧЕСКИЙ АВТОБАТЛЕР · 5×5</span>
+                <h1>АРЕНА ШИНОБИ</h1>
+                <p id="game-status">Операционный штаб</p>
+            </div>
+        </div>
+        <div class="r57-header-center">
+            <div id="series-score-container" class="series-console" aria-label="Счёт серии до пяти побед">
+                <span class="series-label">СЕРИЯ ДО 5</span>
+                <div class="series-score"><b class="team-mark one">I</b><strong id="p1-series-score">0</strong><i>:</i><strong id="p2-series-score">0</strong><b class="team-mark two">II</b></div>
+            </div>
+            <div id="r57-live-score" class="r57-live-score" aria-label="Оставшиеся бойцы" aria-live="polite">
+                <span class="r57-live-team one">ИГРОК 1 <strong id="r57-p1-alive">5/5</strong></span>
+                <b>⚔</b>
+                <span class="r57-live-team two"><strong id="r57-p2-alive">5/5</strong> ИГРОК 2</span>
+            </div>
+        </div>
+        <div class="command-telemetry r57-header-actions">
+            <button id="profile-hub-btn" class="command-profile-btn" type="button" data-r23-action="open-profile" aria-haspopup="dialog" aria-controls="r20-profile-modal"><span id="profile-emblem">◇</span><b>ELO <i id="header-profile-elo">800</i></b><small>◈ <i id="header-profile-coins">150</i></small></button>
+            <button id="tutorial-hub-btn" class="command-icon-btn" type="button" data-r23-action="open-tutorial" aria-label="Открыть обучение">? <span>ОБУЧЕНИЕ</span></button>
+            <button id="settings-hub-btn" class="command-icon-btn" type="button" data-r23-action="open-settings" aria-label="Открыть настройки">⚙ <span>НАСТРОЙКИ</span></button>
+        </div>
+    </header>
+
+    <nav id="r27-phase-rail" class="r27-phase-rail" aria-label="Этапы матча">
+        <ol class="r27-phase-track">
+            <li class="r27-phase-step" data-r27-phase-step="0" data-r27-index="00"><span>Штаб</span></li>
+            <li class="r27-phase-step" data-r27-phase-step="1" data-r27-index="01"><span>1 · Жребий</span></li>
+            <li class="r27-phase-step" data-r27-phase-step="2" data-r27-index="02"><span>2 · Драфт</span></li>
+            <li class="r27-phase-step" data-r27-phase-step="3" data-r27-index="03"><span>3 · Арена</span></li>
+            <li class="r27-phase-step" data-r27-phase-step="4" data-r27-index="04"><span>4 · Бой</span></li>
+            <li class="r27-phase-step" data-r27-phase-step="5" data-r27-index="05"><span>Итог</span></li>
+        </ol>
+    </nav>
+    <div id="r27-live-region" class="r27-sr-only" aria-live="polite" aria-atomic="true"></div>
+
+    <main id="main-container" class="command-main">
+        
+        <!-- CURRENT COMMAND HUB -->
+        <section id="command-hub" class="command-hub r57-command-hub" aria-labelledby="command-hub-title">
+            <div class="r57-hub-grid">
+                <div class="r57-hero-block">
+                    <div class="r57-hero-sigil" aria-hidden="true">忍</div>
+                    <span class="hub-overline">ТАКТИЧЕСКИЙ ДРАФТ · ПОСЛЕДОВАТЕЛЬНЫЕ ДУЭЛИ</span>
+                    <h2 id="command-hub-title">АРЕНА<br><em>ШИНОБИ</em></h2>
+                    <p class="r57-hero-lead">Соберите пять карт и проведите их через последовательные дуэли. Каноническая связь любого размера занимает один слот и одну жизнь.</p>
+                    <div class="r57-feature-row" aria-label="Ключевые параметры игры">
+                        <span><b id="hub-stat-fighters">74</b> бойца</span>
+                        <span><b>5×5</b> драфт</span>
+                        <span><b id="hub-stat-arenas">5</b> арен</span>
+                    </div>
+                </div>
+                <div class="r57-command-center" aria-label="Командный центр">
+                    <div class="r57-profile-row">
+                        <div class="r57-profile-mark"><span id="r57-profile-emblem">忍</span></div>
+                        <div class="r57-profile-copy"><small>КОМАНДНЫЙ ЦЕНТР</small><strong id="hub-profile-rank">Оперативник</strong><span>Elo <b id="hub-profile-elo">800</b> · казна <b>◈ <i id="hub-profile-coins">150</i></b></span></div>
+                    </div>
+                    <button id="hub-start-btn" class="command-primary command-primary-warm hub-start r57-play" type="button" data-r23-action="open-mode-select"><span>ИГРАТЬ</span><b>▶</b></button>
+                    <div class="r57-menu-grid">
+                        <button type="button" data-r23-action="open-profile"><b>◈</b><span>Профиль</span><small>Elo и статистика</small></button>
+                        <button type="button" data-r23-action="open-achievements"><b>🏆</b><span>Достижения</span><small>награды</small></button>
+                        <button type="button" data-r23-action="open-shop"><b>◇</b><span>Магазин</span><small>косметика</small></button>
+                        <button type="button" data-r23-action="open-settings"><b>⚙</b><span>Настройки</span><small>звук и интерфейс</small></button>
+                    </div>
+                    <div id="r21-first-run-banner" class="r21-first-run hidden" aria-live="polite">
+                        <div><span>РЕКОМЕНДУЕМ ОБУЧЕНИЕ</span><strong>Учебный матч покажет весь цикл. Обычная игра доступна сразу.</strong></div>
+                        <div class="r71-first-run-actions"><button type="button" data-r23-action="open-tutorial">ПРОЙТИ ОБУЧЕНИЕ</button><button type="button" data-r23-action="skip-tutorial">ИГРАТЬ БЕЗ ОБУЧЕНИЯ</button></div>
+                    </div>
+                </div>
+            </div>
+            <div class="r57-loop-strip" aria-label="Игровой цикл">
+                <span><b>1</b> Жребий</span><i></i><span><b>2</b> Драфт 5×5</span><i></i><span><b>3</b> Арена</span><i></i><span><b>4</b> Бой</span>
+            </div>
+        </section>
+
+        <!-- INITIATIVE DRAFT PHASE -->
+        <div id="initiative-phase" class="phase-shell initiative-command hidden flex-col items-center justify-center">
+            <div class="phase-heading"><span>ЭТАП 1 ИЗ 4 · ЖРЕБИЙ</span><h2>Определить инициативу</h2><p>Зафиксируйте порядок первого выбора. После броска откроется тактический драфт 5×5.</p></div>
+            
+            <div class="initiative-duel">
+                <div class="initiative-console player-one card-3d">
+                    <span class="text-blue-400 font-bold mb-2 uppercase tracking-wider text-xs md:text-sm">Игрок 1</span>
+                    <span id="init-p1-val" class="text-5xl md:text-6xl font-black text-white my-1 inline-block">🎲</span>
+                </div>
+                <div class="initiative-console player-two card-3d">
+                    <span id="init-p2-label" class="text-orange-400 font-bold mb-2 uppercase tracking-wider text-xs md:text-sm">Игрок 2</span>
+                    <span id="init-p2-val" class="text-5xl md:text-6xl font-black text-white my-1 inline-block">🎲</span>
+                </div>
+            </div>
+
+            <p id="init-result-text" class="text-lg md:text-xl font-bold mb-6 text-purple-300 min-h-[2rem] tracking-wide"></p>
+
+            <button id="roll-init-btn" data-r23-action="roll-initiative" class="command-primary command-primary-warm">
+                <span>ЗАПУСТИТЬ ЖРЕБИЙ</span><b>01</b>
+            </button>
+            <button id="start-draft-btn" data-r23-action="start-draft" class="hidden command-primary command-primary-go">
+                ОТКРЫТЬ ДРАФТ →
+            </button>
+        </div>
+
+        <!-- DRAFT PHASE -->
+        <div id="draft-phase" class="w-full hidden flex-col items-center justify-center transition-opacity duration-500 py-3">
+            <section class="draft-stage-shell" aria-labelledby="draft-turn-text">
+                <div class="draft-stage-header">
+                    <div class="draft-turn-cluster">
+                        <span id="draft-current-player-badge" class="draft-current-player-badge player-one">Игрок 1 выбирает</span>
+                        <h3 id="draft-turn-text" class="title-font draft-turn-title">Ход Игрока 1</h3>
+                        <p id="draft-instruction" class="draft-instruction">Оцените силу, редкость и состав. Заберите бойца себе или передайте сопернику.</p>
+                    </div>
+                    <div class="draft-progress-box" aria-label="Прогресс драфта">
+                        <span id="draft-progress-text">Выбор 1 из 10</span>
+                        <strong id="draft-remaining-text">Осталось 10</strong>
+                    </div>
+                </div>
+                <div class="draft-progress-track" aria-hidden="true"><div id="draft-progress-bar" class="draft-progress-fill"></div></div>
+
+                <div class="draft-board-grid">
+                    <aside class="draft-team-panel team-one" aria-label="Состав Игрока 1">
+                        <div class="draft-team-panel-head">
+                            <span>Команда 1</span>
+                            <strong id="draft-p1-count">0/5</strong>
+                        </div>
+                        <div id="draft-p1-slots" class="draft-team-slots"></div>
+                    </aside>
+
+                    <div id="draft-card" class="draft-card-v2 glass-panel card-3d" aria-live="polite">
+                        <div id="draft-img-container" class="draft-portrait-frame">
+                            <span id="draft-emoji" class="text-7xl drop-shadow-md">🍥</span>
+                            <div class="draft-card-corner-label">DOSSIER · PRIME</div>
+                        </div>
+
+                        <div class="draft-card-title-row">
+                            <div class="min-w-0">
+                                <h4 id="draft-name" class="title-font draft-character-name">Оранжевый Сосуд Зверя</h4>
+                                <div id="draft-archetypes" class="draft-chip-row" aria-label="Архетипы бойца"></div>
+                            </div>
+                            <div class="draft-tier-stack">
+                                <span id="draft-tier-badge" class="draft-tier-badge tier-s">ТИР S</span>
+                                <span id="draft-rarity" class="draft-rarity-label">Элитный</span>
+                            </div>
+                        </div>
+
+                        <div id="draft-affiliation-row" class="draft-affiliation-row">
+                            <span class="draft-meta-label">Принадлежность</span>
+                            <strong id="draft-affiliation">—</strong>
+                        </div>
+
+                        <div class="draft-odds-compact" aria-label="Вероятность тира">
+                            <span>ШАНС ТИРА</span><strong id="draft-tier-chance">—</strong><i id="draft-fighter-chance" class="hidden" aria-hidden="true"></i><i id="draft-pool-size" class="hidden" aria-hidden="true"></i>
+                        </div>
+
+                        <div id="draft-composition-hints" class="draft-composition-hints hidden" aria-label="Совпадения текущего состава"></div>
+
+                        <p id="draft-action-note" class="draft-action-note">Выберите, кому достанется этот боец.</p>
+                        <div class="draft-actions">
+                            <button id="draft-keep-btn" data-r23-action="draft-keep" class="draft-action-btn keep">
+                                <span id="draft-keep-label">ЗАБРАТЬ</span>
+                            </button>
+                            <button id="draft-pass-btn" data-r23-action="draft-pass" class="draft-action-btn pass">
+                                <span id="draft-pass-label">ОТДАТЬ</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <aside class="draft-team-panel team-two" aria-label="Состав Игрока 2">
+                        <div class="draft-team-panel-head">
+                            <span>Команда 2</span>
+                            <strong id="draft-p2-count">0/5</strong>
+                        </div>
+                        <div id="draft-p2-slots" class="draft-team-slots"></div>
+                    </aside>
+                </div>
+            </section>
+        </div>
+
+        <!-- SCROLL PREPARATION PHASE -->
+        <div id="scroll-phase" class="phase-shell hidden flex-col items-center justify-center scroll-command">
+                        <div class="phase-heading compact"><span>ЭТАП 2 ИЗ 4 · ПОДГОТОВКА ПОСЛЕ ДРАФТА</span><h2 id="scroll-turn-text">Игрок 1: сформируйте тактический комплект</h2><p>Распределите тактические свитки. Это подготовка состава, а не отдельный этап матча.</p></div>
+            
+            <button id="roll-scrolls-btn" data-r23-action="roll-scrolls" class="command-primary command-primary-warm">
+                <span>СФОРМИРОВАТЬ КОМПЛЕКТ</span><b>02</b>
+            </button>
+            
+            <div id="scroll-selection-area" class="hidden w-full flex flex-col items-center max-w-5xl">
+                <div class="scroll-kit-panel">
+                    <h4 class="text-amber-400 font-black uppercase text-xs sm:text-sm tracking-widest mb-3">ТАКТИЧЕСКИЙ КОМПЛЕКТ</h4>
+                    <div id="scroll-inventory" class="flex flex-wrap justify-center gap-3 w-full min-h-[70px]"></div>
+                    <p class="text-slate-400 text-xs mt-2 italic text-center">Каждому игроку выпадает от 1 до 5 свитков. Повторы возможны; назначить можно любое число полученных свитков, максимум по одному на бойца. Каждый свиток имеет 1 реальный заряд.</p>
+                </div>
+                <div id="scroll-team-grid" class="flex flex-wrap justify-center gap-4 w-full mb-6"></div>
+                <button id="confirm-scroll-btn" data-r23-action="next-scroll-turn" class="command-primary command-primary-go">
+                    ПОДТВЕРДИТЬ ОСНАЩЕНИЕ →
+                </button>
+            </div>
+        </div>
+
+
+        <!-- ARENA ROLL PHASE -->
+        <div id="arena-phase" class="phase-shell hidden flex-col items-center justify-center arena-roll-phase">
+            <div class="phase-heading compact"><span>ЭТАП 3 ИЗ 4 · АРЕНА</span><h2>Определить поле боя</h2><p>Пять арен прокручиваются открыто. Выпавшая арена действует на весь матч.</p></div>
+            <div id="arena-roll-window" class="arena-roll-window" aria-live="polite">
+                <div id="arena-roll-card" class="arena-roll-card"><div class="arena-roll-placeholder">◈</div><strong>АРЕНА ЕЩЁ НЕ ОПРЕДЕЛЕНА</strong><span>Запустите прокрутку</span></div>
+            </div>
+            <div id="arena-roll-strip" class="arena-roll-strip" aria-hidden="true"></div>
+            <button id="roll-arena-btn" type="button" data-r23-action="roll-arena" class="command-primary command-primary-warm"><span>ПРОКРУТИТЬ АРЕНУ</span><b>03</b></button>
+            <button id="enter-battle-btn" type="button" data-r23-action="enter-battle" class="hidden command-primary command-primary-go">ПЕРЕЙТИ К БОЮ →</button>
+        </div>
+
+        <!-- BATTLE PHASE -->
+        <div id="battle-phase" class="phase-shell hidden flex-col items-center relative battle-command">
+
+            <div class="r57-battle-score" aria-label="Счёт оставшихся бойцов">
+                <div class="r57-score-side one"><span>ИГРОК 1</span><strong id="r57-battle-p1">5/5</strong><div id="r57-p1-pips" class="r57-pips" aria-hidden="true"></div></div>
+                <div class="r57-score-vs">⚔</div>
+                <div class="r57-score-side two"><span>ИГРОК 2</span><strong id="r57-battle-p2">5/5</strong><div id="r57-p2-pips" class="r57-pips" aria-hidden="true"></div></div>
+            </div>
+
+            <div id="arena-context-panel" class="arena-context-panel w-full max-w-5xl mb-4">
+                <div class="arena-context-icon">◈</div>
+                <div class="arena-context-copy"><span>АРЕНА МАТЧА</span><strong id="arena-context-name">—</strong><p id="arena-context-desc">Контекст поля боя будет определён перед первым раундом.</p><div id="arena-context-tags" class="arena-context-tags"></div></div>
+            </div>
+
+            <div id="battle-turn-indicator" class="mb-4 text-center px-5 py-2.5 rounded-xl bg-slate-900/90 border border-slate-700 text-xs sm:text-sm font-bold text-amber-300 tracking-wider shadow-lg"></div>
+
+            <div class="battle-desk-grid">
+                <!-- Team 1 Roster -->
+                <div id="p1-roster-box" class="roster-console roster-console-one">
+                    <h3 id="p1-roster-title" class="title-font text-lg font-black text-center mb-4 text-blue-400 border-b border-blue-900/50 pb-2.5 uppercase tracking-widest flex items-center justify-center gap-2">
+                        <span>Команда 1</span>
+                    </h3>
+                    <div id="p1-roster" class="flex flex-col gap-2.5 overflow-y-auto pr-1"></div>
+                </div>
+
+                <!-- Central Arena -->
+                <div class="combat-table">
+                    <div class="flex items-center justify-center gap-3 sm:gap-6 w-full mb-4">
+                        <div class="flex flex-col items-center">
+                            <div id="arena-p1" class="arena-slot card-3d w-36 h-48 md:w-44 md:h-56 bg-slate-950/80 border-2 border-dashed border-slate-800 rounded-2xl flex items-center justify-center flex-col p-2.5 relative transition-all duration-300 shadow-inner"><span class="text-slate-500 font-semibold uppercase tracking-widest text-xs text-center">Слот<br><span class="text-sm opacity-70">(Выбор)</span></span></div>
+                            <button id="lock-p1-btn" data-r23-action="lock-p1" class="hidden mt-2 bg-blue-600 hover:bg-blue-500 text-white px-4 py-1.5 rounded-xl font-black text-xs shadow-md border border-blue-400/50 uppercase tracking-wider transition transform active:scale-95">
+                                ПОДТВЕРДИТЬ ✅
+                            </button>
+                        </div>
+                        
+                        <div class="combat-vs-mark">VS</div>
+                        
+                        <div class="flex flex-col items-center">
+                            <div id="arena-p2" class="arena-slot card-3d w-36 h-48 md:w-44 md:h-56 bg-slate-950/80 border-2 border-dashed border-slate-800 rounded-2xl flex items-center justify-center flex-col p-2.5 relative transition-all duration-300 shadow-inner"><span class="text-slate-500 font-semibold uppercase tracking-widest text-xs text-center">Слот<br><span class="text-sm opacity-70">(Выбор)</span></span></div>
+                            <button id="lock-p2-btn" data-r23-action="lock-p2" class="hidden mt-2 bg-orange-600 hover:bg-orange-500 text-white px-4 py-1.5 rounded-xl font-black text-xs shadow-md border border-orange-400/50 uppercase tracking-wider transition transform active:scale-95">
+                                ПОДТВЕРДИТЬ ✅
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="lore-duel-strip" class="lore-duel-strip" aria-live="polite" aria-label="Активные канонические карты в текущей дуэли">
+                        <div id="lore-p1-active" class="lore-duel-card side-one"><span>ИГРОК 1</span><strong>Без активной связи</strong><small>Обычная одиночная карта</small></div>
+                        <div class="lore-duel-mark">✦</div>
+                        <div id="lore-p2-active" class="lore-duel-card side-two"><span>ИГРОК 2</span><strong>Без активной связи</strong><small>Обычная одиночная карта</small></div>
+                    </div>
+                    
+                    <button id="fight-btn" data-r23-action="start-combat" class="command-primary command-primary-danger opacity-40 pointer-events-none">
+                        <span>РАЗРЕШИТЬ ДУЭЛЬ</span><b>VS</b>
+                    </button>
+                </div>
+
+                <!-- Team 2 Roster -->
+                <div id="p2-roster-box" class="roster-console roster-console-two">
+                    <h3 id="p2-roster-title" class="title-font text-lg font-black text-center mb-4 text-orange-400 border-b border-orange-900/50 pb-2.5 uppercase tracking-widest flex items-center justify-center gap-2">
+                        <span>Команда 2</span>
+                    </h3>
+                    <div id="p2-roster" class="flex flex-col gap-2.5 overflow-y-auto pr-1"></div>
+                </div>
+            </div>
+
+            <div id="combat-summary" class="combat-summary" aria-live="polite">
+                <span>ТЕКУЩИЙ РАУНД</span><strong>Выберите бойцов</strong><small>Подробный расчёт скрыт, пока он не понадобится.</small>
+            </div>
+            <details class="combat-chronicle">
+                <summary>ПОДРОБНЫЙ РАЗБОР БОЯ</summary>
+                <div id="combat-log" class="space-y-3 max-h-72 overflow-y-auto font-mono text-slate-300 pr-2 leading-relaxed"></div>
+            </details>
+        </div>
+
+        <!-- END MATCH SCREEN -->
+        <div id="end-screen" class="phase-shell hidden flex-col items-center justify-center text-center end-command">
+            <div id="profile-victory-seal" class="r20-victory-seal">ПОБЕДА</div>
+            <h1 id="end-title" class="end-command-title">ПОБЕДА В МАТЧЕ</h1>
+            <h2 id="winner-text" class="text-2xl md:text-4xl text-white mb-4 font-black uppercase tracking-wider"></h2>
+            <p id="series-status-text" class="text-base md:text-lg text-orange-300 mb-8 font-semibold"></p>
+            <div id="match-results-panel" class="match-results-panel w-full max-w-5xl mb-5"></div>
+            <div id="progression-results-panel" class="r20-match-progress hidden w-full max-w-5xl mb-6"></div>
+            <button id="end-action-btn" data-r23-action="end-action" class="command-primary command-primary-go">
+                СЛЕДУЮЩИЙ МАТЧ ⚔️
+            </button>
+        </div>
+
+    </main>
+
+    <aside id="r33-coach" class="r33-coach hidden" role="status" aria-live="polite" aria-label="Тренер учебного матча">
+        <div id="r33-coach-step" class="r33-coach-step">01</div>
+        <div class="r33-coach-copy"><small id="r33-coach-kicker">УЧЕБНЫЙ МАТЧ</small><strong id="r33-coach-title">Тренер</strong><p id="r33-coach-text"></p><div id="r33-coach-progress"></div></div>
+        <div class="r33-coach-actions"><button type="button" data-r33-action="abort-training">ВЫЙТИ ИЗ ОБУЧЕНИЯ</button></div>
+    </aside>
+    <div id="r33-training-badge" class="r33-training-badge hidden">УЧЕБНЫЙ МАТЧ · ПРОФИЛЬ ЗАЩИЩЁН</div>
+
+
+    <button id="app-match-exit-btn" class="app-match-exit hidden" type="button" data-r23-action="request-match-exit">← В МЕНЮ</button>
+    <div id="app-exit-modal" class="app-exit-modal hidden" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="app-exit-title">
+        <div class="app-exit-backdrop" aria-hidden="true"></div>
+        <section class="app-exit-panel">
+            <span>ТЕКУЩИЙ МАТЧ</span><h2 id="app-exit-title">Выйти в меню?</h2>
+            <p id="app-exit-copy">Прогресс текущего матча будет потерян. Награды и Elo не начисляются.</p>
+            <div><button type="button" data-r23-action="cancel-match-exit">ОСТАТЬСЯ</button><button type="button" class="danger" data-r23-action="confirm-match-exit">ВЫЙТИ</button></div>
+        </section>
+    </div>
+
+    <div id="r20-profile-modal" class="r20-profile-modal hidden" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="r20-profile-title">
+        <button class="r20-profile-backdrop" type="button" data-r23-action="close-profile" aria-label="Закрыть профиль"></button>
+        <section class="r20-profile-panel">
+            <header class="r20-profile-head"><div><span>ПРОФИЛЬ · ПРОГРЕССИЯ</span><h2 id="r20-profile-title">Профиль оперативника</h2></div><button type="button" data-r23-action="close-profile" aria-label="Закрыть">×</button></header>
+            <nav class="r20-profile-tabs" aria-label="Разделы профиля">
+                <button type="button" data-r20-tab="profile">ПРОФИЛЬ</button>
+                <button type="button" data-r20-tab="achievements">ДОСТИЖЕНИЯ</button>
+                <button type="button" data-r20-tab="shop">КОЛЛЕКЦИЯ</button>
+                
+            </nav>
+            <div id="r20-profile-notice" class="r20-profile-notice"></div>
+            <div id="r20-profile-content" class="r20-profile-content"></div>
+        </section>
+    </div>
+
+    <div id="r21-settings-modal" class="r21-modal hidden" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="r21-settings-title">
+        <button class="r21-modal-backdrop" type="button" data-r23-action="close-settings" aria-label="Закрыть настройки"></button>
+        <section class="r21-panel">
+            <header class="r21-panel-head"><div><span>СИСТЕМНЫЕ ПАРАМЕТРЫ</span><h2 id="r21-settings-title">Настройки</h2></div><button type="button" data-r23-action="close-settings" aria-label="Закрыть">×</button></header>
+            <div id="r21-settings-content" class="r21-settings-content"></div>
+        </section>
+    </div>
+
+    <div id="r21-tutorial-modal" class="r21-modal hidden" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="r21-tutorial-title">
+        <button class="r21-modal-backdrop" type="button" data-r23-action="close-tutorial" aria-label="Закрыть обучение"></button>
+        <section class="r21-panel r21-tutorial-panel">
+            <header class="r21-panel-head"><div><span>УЧЕБНЫЙ МАТЧ · ПО ЖЕЛАНИЮ</span><h2>Полевое обучение</h2></div><button type="button" data-r23-action="close-tutorial" aria-label="Закрыть">×</button></header>
+            <div class="r21-tutorial-stage">
+                <div class="r21-tutorial-kicker"><span id="r21-tutorial-tag">01 · ОСНОВА</span><strong id="r21-tutorial-count">1/8</strong></div>
+                <h3 id="r21-tutorial-title">Цель операции</h3>
+                <p id="r21-tutorial-body"></p>
+                <p id="r21-tutorial-tip" class="r21-tutorial-tip"></p>
+                <div id="r21-tutorial-quiz" class="r21-tutorial-quiz hidden"></div>
+            </div>
+            <div class="r21-tutorial-nav"><button id="r21-tutorial-prev" type="button" data-r23-action="tutorial-prev">← НАЗАД</button><button class="r21-tutorial-skip" type="button" data-r23-action="close-tutorial">ЗАКРЫТЬ ОКНО</button><button id="r21-tutorial-next" type="button" data-r23-action="tutorial-next">ДАЛЕЕ →</button></div>
+        </section>
+    </div>
+
+    <div id="r57-mode-modal" class="r57-mode-modal hidden" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="r57-mode-title">
+        <button class="r57-mode-backdrop" type="button" data-r23-action="close-mode-select" aria-label="Закрыть выбор режима"></button>
+        <section class="r57-mode-panel">
+            <header><div><span>НОВАЯ ОПЕРАЦИЯ</span><h2 id="r57-mode-title">Выберите режим</h2></div><button type="button" data-r23-action="close-mode-select" aria-label="Закрыть">×</button></header>
+            <div class="hub-mode-buttons r57-mode-buttons">
+                <button id="mode-local-btn" type="button" data-r23-action="start-local" aria-pressed="true"><b>2P</b><span>2 ИГРОКА</span><small>на одном устройстве</small></button>
+                <button id="mode-cpu-btn" type="button" data-r23-action="show-cpu-difficulties" aria-pressed="false"><b>CPU</b><span>ПРОТИВ CPU</span><small>4 уровня сложности</small></button>
+            </div>
+            <div id="cpu-difficulty-controls" class="cpu-difficulty-controls hidden r57-difficulty-grid" aria-label="Сложность CPU">
+                <button id="cpu-diff-easy" type="button" data-r23-action="start-cpu-easy">EASY<small>простые решения</small></button>
+                <button id="cpu-diff-medium" type="button" data-r23-action="start-cpu-medium">MEDIUM<small>сила + простые связи</small></button>
+                <button id="cpu-diff-hard" type="button" data-r23-action="start-cpu-hard">HARD<small>матчапы · lore · арена</small></button>
+                <button id="cpu-diff-master" type="button" data-r23-action="start-cpu-master">MASTER<small>ресурсы и план вперёд</small></button>
+            </div>
+            <p class="cpu-fairness-note">CPU использует те же правила, случайность и доступную информацию, что и игрок. Скрытых бонусов силы нет.</p>
+        </section>
+    </div>
+
+    <div id="app-local-handoff" class="app-local-handoff hidden" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="app-local-handoff-title">
+        <div class="app-local-handoff-backdrop" aria-hidden="true"></div>
+        <section class="app-local-handoff-panel">
+            <span>ЛОКАЛЬНЫЙ РЕЖИМ · ПРИВАТНОСТЬ</span>
+            <h2 id="app-local-handoff-title">Передайте устройство</h2>
+            <p id="app-local-handoff-copy">Подготовьте скрытый тактический комплект.</p>
+            <button type="button" data-r23-action="confirm-local-handoff">Я ГОТОВ · ПОКАЗАТЬ МОЙ ХОД</button>
+        </section>
+    </div>
+
+    <div id="r57-link-toast" class="r57-link-toast hidden" role="status" aria-live="polite" aria-atomic="true">
+        <div class="r57-link-toast-card">
+            <span id="r57-link-toast-kicker" class="r57-link-toast-kicker">СВЯЗЬ СФОРМИРОВАНА</span>
+            <div id="r57-link-toast-portraits" class="r57-link-toast-portraits" aria-hidden="true"></div>
+            <strong id="r57-link-toast-title">—</strong>
+            <small id="r57-link-toast-meta">—</small>
+        </div>
+    </div>
+
+    <div id="r57-link-choice-modal" class="r57-link-choice-modal hidden" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="r57-link-choice-title">
+        <div class="r57-link-choice-backdrop" aria-hidden="true"></div>
+        <section class="r57-link-choice-panel">
+            <span class="r57-link-choice-kicker">СОСТАВНАЯ КАРТА</span>
+            <h2 id="r57-link-choice-title">Выберите объединение</h2>
+            <p id="r57-link-choice-copy">Один боец может находиться только в одной составной карте.</p>
+            <div id="r57-link-choice-options" class="r57-link-choice-options"></div>
+        </section>
+    </div>
+
+    <div id="r63-leader-modal" class="r63-leader-modal hidden" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="r63-leader-title">
+        <div class="r63-leader-backdrop" aria-hidden="true"></div>
+        <section class="r63-leader-panel">
+            <span>СОСТАВНАЯ КАРТА · ВЫБОР ЛИДЕРА</span>
+            <h2 id="r63-leader-title">Выберите лидера</h2>
+            <p id="r63-leader-copy">Лидер участвует в базовом matchup. Остальные участники дают единый lore-эффект.</p>
+            <div id="r63-leader-options" class="r63-leader-options"></div>
+        </section>
+    </div>
+
+    <footer id="draft-rosters" class="command-footer">
+        <div class="w-1/2 pr-4 border-r border-slate-800 flex justify-between items-center">
+            <span class="text-blue-400 font-bold tracking-widest uppercase text-xs sm:text-sm">Команда 1</span>
+            <span id="p1-count" class="bg-slate-900 border border-blue-900/50 text-blue-300 px-3 py-1 rounded-lg font-mono font-bold text-xs sm:text-sm">0/5</span>
+        </div>
+        <div class="w-1/2 pl-4 flex justify-between items-center">
+            <span class="text-orange-400 font-bold tracking-widest uppercase text-xs sm:text-sm">Команда 2</span>
+            <span id="p2-count" class="bg-slate-900 border border-orange-900/50 text-orange-300 px-3 py-1 rounded-lg font-mono font-bold text-xs sm:text-sm">0/5</span>
+        </div>
+    </footer>
+
+    <!-- Production runtime -->
+
+    <script src="js/game-vk-bridge.js"></script>
+</body>
+</html>
