@@ -1,0 +1,734 @@
+/*
+ * R74 presentation contract. The R72 gameplay stylesheet supplies visual tokens
+ * and components; all phase geometry and density choices live here.
+ * mode × form factor × available height are set by layout-r74.js.
+ */
+html { overflow-x: clip; }
+body.r74-layout {
+  --r74-top: max(var(--vk-safe-top, 0px), env(safe-area-inset-top, 0px));
+  --r74-right: max(var(--vk-safe-right, 0px), env(safe-area-inset-right, 0px));
+  --r74-bottom: max(var(--vk-safe-bottom, 0px), env(safe-area-inset-bottom, 0px));
+  --r74-left: max(var(--vk-safe-left, 0px), env(safe-area-inset-left, 0px));
+  --r74-gap: 8px;
+  --r74-tap: 44px;
+  min-height: 100dvh !important;
+  padding-bottom: 0 !important;
+  overflow-x: clip !important;
+}
+body.r74-layout *, body.r74-layout *::before, body.r74-layout *::after { box-sizing: border-box; }
+body.r74-layout .hidden { display: none !important; }
+body.r74-layout #main-container {
+  width: min(1280px, 100%) !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  height: auto !important;
+  margin: 0 auto !important;
+  padding: 8px max(10px, var(--r74-right)) max(8px, var(--r74-bottom)) max(10px, var(--r74-left)) !important;
+  align-items: stretch !important;
+  justify-content: flex-start !important;
+}
+body.r74-layout .phase-shell { max-width: 100%; min-width: 0; }
+body.r74-layout :is(button, [role="button"], summary):focus-visible {
+  outline: 2px solid #fbbf24 !important;
+  outline-offset: 2px !important;
+}
+body.r74-layout :is(.r20-profile-panel,.r21-panel,.r57-mode-panel,.r57-link-choice-panel,.r63-leader-panel,.app-exit-panel,.app-local-handoff-panel) {
+  max-width: calc(100vw - var(--r74-left) - var(--r74-right) - 16px) !important;
+  max-height: calc(100dvh - var(--r74-top) - var(--r74-bottom) - 16px) !important;
+  overflow-y: auto !important;
+  overscroll-behavior: contain;
+}
+body.r74-layout :is(.r20-profile-modal,.r21-modal,.r57-mode-modal,.r63-leader-modal,.r57-link-choice-modal,.app-exit-modal,.app-local-handoff) {
+  padding: calc(8px + var(--r74-top)) calc(8px + var(--r74-right)) calc(8px + var(--r74-bottom)) calc(8px + var(--r74-left)) !important;
+}
+
+/* Each current decision belongs to the visible phase. Extended details scroll separately. */
+body.r74-layout[data-r74-phase="scroll"] {
+  height: 100dvh !important;
+  overflow-y: hidden !important;
+}
+body.r74-layout[data-r74-phase="scroll"] #main-container {
+  flex: 1 1 auto !important;
+  overflow: hidden !important;
+  padding-top: 4px !important;
+  padding-bottom: calc(5px + var(--r74-bottom)) !important;
+}
+body.r74-layout #scroll-phase {
+  width: 100% !important;
+  max-width: 1160px !important;
+  min-height: 0 !important;
+  height: 100% !important;
+  flex: 1 1 auto !important;
+  margin: 0 auto !important;
+  padding: 4px !important;
+  gap: var(--r74-gap) !important;
+  justify-content: flex-start !important;
+  overflow: hidden !important;
+}
+body.r74-layout #scroll-phase .phase-heading {
+  flex: 0 0 auto;
+  width: 100%;
+  margin: 0 auto !important;
+}
+body.r74-layout #scroll-phase .phase-heading > span { font-size: 11px !important; }
+body.r74-layout #scroll-turn-text {
+  max-width: 100%;
+  margin: 2px auto !important;
+  font-size: clamp(17px, 2vw, 23px) !important;
+  line-height: 1.18 !important;
+  overflow-wrap: anywhere;
+}
+body.r74-layout #scroll-phase .phase-heading p { margin: 3px 0 !important; font-size: 12px !important; line-height: 1.25 !important; }
+body.r74-layout #roll-scrolls-btn { flex: 0 0 auto; align-self: center; min-height: var(--r74-tap) !important; }
+body.r74-layout #scroll-selection-area {
+  flex: 1 1 auto !important;
+  display: grid !important;
+  grid-template-rows: auto minmax(0, 1fr) auto !important;
+  gap: var(--r74-gap) !important;
+  width: 100% !important;
+  max-width: none !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+  align-items: stretch !important;
+}
+body.r74-layout #scroll-selection-area.hidden { display: none !important; }
+body.r74-layout .scroll-kit-panel {
+  flex: 0 0 auto;
+  min-width: 0;
+  max-height: min(35dvh, 180px);
+  margin: 0 !important;
+  padding: 7px 10px !important;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+body.r74-layout .scroll-kit-panel > h4 { margin: 0 0 4px !important; font-size: 12px !important; }
+body.r74-layout #scroll-inventory {
+  display: flex !important;
+  flex-wrap: nowrap !important;
+  justify-content: flex-start !important;
+  align-items: center !important;
+  gap: 6px !important;
+  min-height: 44px !important;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  overscroll-behavior-inline: contain;
+  scrollbar-width: thin;
+  padding: 2px !important;
+}
+body.r74-layout #scroll-inventory > [data-r23-scroll-candidate] {
+  display: inline-flex !important;
+  width: max-content !important;
+  min-width: max-content !important;
+  min-height: var(--r74-tap) !important;
+  padding: 6px 9px !important;
+  margin: 0 !important;
+  border-radius: 9px !important;
+  white-space: nowrap;
+  transform: none !important;
+  font-size: 13px !important;
+  touch-action: manipulation;
+}
+body.r74-layout #scroll-inventory > [aria-pressed="true"] { outline: 2px solid #fbbf24 !important; outline-offset: -2px !important; }
+body.r74-layout .r74-scroll-status { color: #a7f3d0; font-size: 12px !important; font-weight: 800; line-height: 1.3; margin-top: 3px; }
+body.r74-layout .r74-scroll-rules { color: #a9b6c4; font-size: 12px; line-height: 1.35; }
+body.r74-layout .r74-scroll-rules summary { cursor: pointer; display: inline-flex; align-items: center; min-height: 28px; color: #cbd5e1; }
+body.r74-layout .r74-scroll-rules p { margin: 2px 0 0 !important; font-size: 12px !important; }
+body.r74-layout #scroll-team-grid {
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  grid-auto-rows: min-content;
+  align-content: start !important;
+  align-items: start !important;
+  gap: 6px !important;
+  width: 100% !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  margin: 0 !important;
+  padding: 1px 2px 6px !important;
+  overflow-y: auto !important;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+}
+body.r74-layout .r57-scroll-unit {
+  width: 100% !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  padding: 5px !important;
+  border-radius: 11px !important;
+}
+body.r74-layout .r57-scroll-unit-head {
+  padding: 0 0 3px !important;
+  margin: 0 0 4px !important;
+  gap: 4px !important;
+  align-items: center !important;
+}
+body.r74-layout .r57-scroll-unit-head span { font-size: 10px !important; }
+body.r74-layout .r57-scroll-unit-head strong { font-size: 12px !important; line-height: 1.18 !important; }
+body.r74-layout .r57-scroll-unit-head small { display: none !important; }
+body.r74-layout .r57-scroll-unit.composite .r57-scroll-unit-head small {
+  display: block !important;
+  flex-basis: 100%;
+  min-width: 0;
+  font-size: 11px !important;
+  line-height: 1.2 !important;
+  white-space: normal !important;
+  overflow-wrap: anywhere;
+}
+body.r74-layout .r57-scroll-members { display: block !important; }
+body.r74-layout .r57-scroll-fighter {
+  display: grid !important;
+  grid-template-columns: 46px minmax(0, 1fr) !important;
+  grid-template-rows: auto auto !important;
+  align-content: center !important;
+  align-items: center !important;
+  gap: 2px 6px !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  min-height: 63px !important;
+  padding: 4px !important;
+  text-align: left !important;
+  border-radius: 8px !important;
+}
+body.r74-layout .r57-scroll-portrait {
+  grid-row: 1 / 3;
+  grid-column: 1;
+  width: 44px !important;
+  height: 52px !important;
+  margin: 0 !important;
+}
+body.r74-layout .r57-scroll-fighter > strong {
+  grid-column: 2;
+  min-width: 0;
+  font-size: 13px !important;
+  line-height: 1.14 !important;
+  white-space: normal !important;
+  overflow-wrap: anywhere;
+}
+body.r74-layout .r57-scroll-state { grid-column: 2; min-width: 0; }
+body.r74-layout .r57-scroll-state span {
+  display: block !important;
+  font-size: 11px !important;
+  line-height: 1.2 !important;
+  white-space: normal !important;
+  overflow-wrap: anywhere;
+}
+body.r74-layout #confirm-scroll-btn {
+  position: relative !important;
+  align-self: end !important;
+  justify-self: center !important;
+  flex: 0 0 auto !important;
+  width: min(470px, 100%) !important;
+  min-height: var(--r74-tap) !important;
+  margin: 0 !important;
+  padding: 6px 12px !important;
+  font-size: 15px !important;
+  white-space: normal !important;
+}
+
+/* Draft: current card and KEEP/PASS stay before secondary rosters. */
+body.r74-layout #draft-phase { padding: 3px 0 !important; align-items: center !important; justify-content: flex-start !important; }
+body.r74-layout .draft-stage-shell { width: min(1160px, 100%) !important; max-width: 100% !important; gap: 6px !important; }
+body.r74-layout .draft-stage-header { padding: 7px 9px !important; gap: 6px !important; }
+body.r74-layout .draft-board-grid {
+  display: grid !important;
+  grid-template-columns: minmax(160px, 210px) minmax(300px, 490px) minmax(160px, 210px) !important;
+  grid-template-areas: "p1 card p2" !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  align-items: start !important;
+}
+body.r74-layout .draft-team-panel { padding: 7px !important; min-width: 0; }
+body.r74-layout .draft-team-slots { gap: 5px !important; }
+body.r74-layout .draft-team-slot { height: 54px !important; min-height: 54px !important; padding: 4px !important; }
+body.r74-layout .draft-team-slot img { width: 42px !important; height: 42px !important; }
+body.r74-layout .draft-card-v2 { width: 100% !important; max-width: 490px !important; padding: 9px !important; }
+body.r74-layout .draft-portrait-frame { height: clamp(165px, 26dvh, 270px) !important; min-height: 0 !important; margin-bottom: 6px !important; }
+body.r74-layout .draft-character-name { font-size: clamp(17px, 2vw, 23px) !important; }
+body.r74-layout .draft-affiliation-row, body.r74-layout .draft-odds-compact { padding: 4px 6px !important; margin: 3px 0 !important; }
+body.r74-layout .draft-action-note { min-height: 0 !important; margin: 4px 0 !important; padding: 3px !important; }
+body.r74-layout .draft-action-btn { min-height: 48px !important; }
+
+/* Tutorial coach enters phase flow on wider viewports. Portrait keeps the R67 action host. */
+body.r74-layout[data-r74-mode="tutorial"] .r33-coach:not(.hidden) {
+  position: relative !important;
+  inset: auto !important;
+  transform: none !important;
+  width: 100% !important;
+  max-width: none !important;
+  max-height: min(23dvh, 106px) !important;
+  overflow-y: auto !important;
+  margin: 0 0 4px !important;
+  padding: 5px 7px !important;
+  z-index: 2 !important;
+}
+body.r74-layout[data-r74-mode="tutorial"] .r33-coach-copy p { font-size: 12px !important; line-height: 1.25 !important; }
+body.r74-layout[data-r74-mode="tutorial"] .r33-coach-actions button { min-height: 34px !important; height: auto !important; font-size: 11px !important; }
+body.r74-layout[data-r74-mode="tutorial"] .draft-portrait-frame { height: clamp(120px, 21dvh, 205px) !important; }
+body.r74-layout[data-r74-mode="tutorial"] .r57-scroll-fighter {
+  min-height: 63px !important;
+  grid-template-rows: auto auto !important;
+}
+body.r74-layout[data-r74-mode="tutorial"] .r57-scroll-portrait { height: 52px !important; }
+
+/* Arena and result preserve the current action while details remain readable. */
+body.r74-layout #initiative-phase,
+body.r74-layout #arena-phase { padding-bottom: calc(76px + var(--r74-bottom)) !important; }
+body.r74-layout[data-r74-phase="initiative"] #initiative-phase :is(#roll-init-btn,#start-draft-btn),
+body.r74-layout[data-r74-phase="arena"] #arena-phase :is(#roll-arena-btn,#enter-battle-btn) {
+  position: fixed !important;
+  left: 50% !important;
+  bottom: calc(7px + var(--r74-bottom)) !important;
+  transform: translateX(-50%) !important;
+  z-index: 78 !important;
+  width: min(470px, calc(100vw - var(--r74-left) - var(--r74-right) - 16px)) !important;
+  min-height: 48px !important;
+  margin: 0 !important;
+  box-shadow: 0 4px 28px #020617 !important;
+}
+body.r74-layout #arena-phase { justify-content: flex-start !important; gap: 8px !important; }
+body.r74-layout #arena-phase .phase-heading { margin-bottom: 2px !important; }
+body.r74-layout .arena-roll-window { min-height: 0 !important; }
+body.r74-layout .arena-roll-card { grid-template-rows: clamp(110px, 24dvh, 215px) auto auto auto !important; }
+body.r74-layout .arena-roll-art, body.r74-layout .arena-roll-placeholder { height: 100% !important; max-height: 30dvh !important; }
+body.r74-layout #arena-phase :is(#roll-arena-btn,#enter-battle-btn) { min-height: var(--r74-tap) !important; }
+body.r74-layout #battle-phase { width: 100% !important; max-width: 1280px !important; padding-bottom: calc(75px + var(--r74-bottom)) !important; }
+body.r74-layout #battle-phase #fight-btn {
+  position: fixed !important;
+  left: 50% !important;
+  right: auto !important;
+  bottom: calc(7px + var(--r74-bottom)) !important;
+  transform: translateX(-50%) !important;
+  z-index: 78 !important;
+  width: min(470px, calc(100vw - var(--r74-left) - var(--r74-right) - 16px)) !important;
+  min-height: 48px !important;
+  margin: 0 !important;
+  box-shadow: 0 4px 28px #020617 !important;
+}
+body.r74-layout #end-screen { width: 100%; padding-bottom: calc(75px + var(--r74-bottom)) !important; }
+body.r74-layout[data-r74-phase="end"] #end-action-btn {
+  position: fixed !important;
+  bottom: calc(7px + var(--r74-bottom)) !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  z-index: 78 !important;
+  width: min(470px, calc(100vw - var(--r74-left) - var(--r74-right) - 16px)) !important;
+  min-height: 48px !important;
+  margin: 0 !important;
+  box-shadow: 0 4px 28px #020617 !important;
+}
+body.r74-layout .r57-battle-score { position: relative !important; top: auto !important; }
+body.r74-layout .arena-slot { height: clamp(155px, 28dvh, 305px) !important; }
+body.r74-layout .roster-console { max-height: min(52dvh, 440px) !important; }
+body.r74-layout :is(#p1-roster,#p2-roster) { overflow-y: auto !important; }
+
+/* Mid-size tablet: two rosters below the current decision. */
+body.r74-layout[data-r74-profile="tablet"] .draft-board-grid {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+  grid-template-areas: "card card" "p1 p2" !important;
+}
+body.r74-layout[data-r74-profile="tablet"] .draft-card-v2 { justify-self: center !important; }
+body.r74-layout[data-r74-profile="tablet"] .draft-team-slots { grid-template-columns: repeat(5, minmax(0, 1fr)) !important; }
+body.r74-layout[data-r74-profile="tablet"] .draft-team-slot { height: 52px !important; min-height: 52px !important; }
+body.r74-layout[data-r74-profile="tablet"] #scroll-team-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+body.r74-layout[data-r74-profile="tablet"] .battle-desk-grid { grid-template-columns: 1fr 1fr !important; }
+body.r74-layout[data-r74-profile="tablet"] .combat-table { grid-column: 1 / 3 !important; grid-row: 1 !important; }
+
+/* Phone portrait uses vertical hierarchy. The current card stays first. */
+body.r74-layout:is([data-r74-profile="phone-portrait"],[data-r74-profile="phone-short"]) {
+  --r74-gap: 5px;
+}
+body.r74-layout:is([data-r74-profile="phone-portrait"],[data-r74-profile="phone-short"]) #r27-phase-rail { display: none !important; }
+body.r74-layout:is([data-r74-profile="phone-portrait"],[data-r74-profile="phone-short"]) .r57-header-center { display: none !important; }
+body.r74-layout:is([data-r74-profile="phone-portrait"],[data-r74-profile="phone-short"]) #main-container { padding: 4px calc(5px + var(--r74-right)) calc(5px + var(--r74-bottom)) calc(5px + var(--r74-left)) !important; }
+body.r74-layout:is([data-r74-profile="phone-portrait"],[data-r74-profile="phone-short"]) .draft-board-grid {
+  grid-template-columns: minmax(0, 1fr) !important;
+  grid-template-areas: "card" "p1" "p2" !important;
+}
+body.r74-layout:is([data-r74-profile="phone-portrait"],[data-r74-profile="phone-short"]) .draft-stage-header {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) auto !important;
+  padding: 5px !important;
+}
+body.r74-layout:is([data-r74-profile="phone-portrait"],[data-r74-profile="phone-short"]) .draft-instruction { display: none !important; }
+body.r74-layout:is([data-r74-profile="phone-portrait"],[data-r74-profile="phone-short"]) .draft-turn-title { font-size: 16px !important; }
+body.r74-layout:is([data-r74-profile="phone-portrait"],[data-r74-profile="phone-short"]) .draft-progress-box { width: auto !important; align-self: center !important; padding: 3px 5px !important; font-size: 11px !important; }
+body.r74-layout:is([data-r74-profile="phone-portrait"],[data-r74-profile="phone-short"]) .draft-card-v2 { max-width: none !important; padding: 6px !important; }
+body.r74-layout:is([data-r74-profile="phone-portrait"],[data-r74-profile="phone-short"]) .draft-portrait-frame { height: clamp(112px, 38vw, 164px) !important; min-height: 0 !important; margin-bottom: 4px !important; }
+body.r74-layout:is([data-r74-profile="phone-portrait"],[data-r74-profile="phone-short"]) .draft-action-note { display: none !important; }
+body.r74-layout:is([data-r74-profile="phone-portrait"],[data-r74-profile="phone-short"]) .draft-actions {
+  position: sticky !important;
+  bottom: var(--r74-bottom) !important;
+  z-index: 36 !important;
+  background: #0b121d !important;
+  gap: 5px !important;
+}
+body.r74-layout:is([data-r74-profile="phone-portrait"],[data-r74-profile="phone-short"]) .draft-action-btn { min-height: 44px !important; }
+body.r74-layout:is([data-r74-profile="phone-portrait"],[data-r74-profile="phone-short"]) .draft-team-panel { padding: 5px !important; }
+body.r74-layout:is([data-r74-profile="phone-portrait"],[data-r74-profile="phone-short"]) .draft-team-slots { grid-template-columns: repeat(5, minmax(0, 1fr)) !important; }
+body.r74-layout:is([data-r74-profile="phone-portrait"],[data-r74-profile="phone-short"]) .draft-team-slot { height: 44px !important; min-height: 44px !important; padding: 2px !important; }
+body.r74-layout:is([data-r74-profile="phone-portrait"],[data-r74-profile="phone-short"]) .draft-team-slot img { width: 100% !important; height: 100% !important; }
+body.r74-layout:is([data-r74-profile="phone-portrait"],[data-r74-profile="phone-short"]) #scroll-team-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+body.r74-layout:is([data-r74-profile="phone-portrait"],[data-r74-profile="phone-short"]) #scroll-phase .phase-heading p { display: none !important; }
+body.r74-layout:is([data-r74-profile="phone-portrait"],[data-r74-profile="phone-short"]) .r57-scroll-fighter {
+  grid-template-columns: 38px minmax(0, 1fr) !important;
+  min-height: 65px !important;
+}
+body.r74-layout:is([data-r74-profile="phone-portrait"],[data-r74-profile="phone-short"]) .r57-scroll-portrait { width: 36px !important; height: 48px !important; }
+body.r74-layout:is([data-r74-profile="phone-portrait"],[data-r74-profile="phone-short"]) .r57-scroll-fighter > strong { font-size: 12px !important; }
+body.r74-layout:is([data-r74-profile="phone-portrait"],[data-r74-profile="phone-short"]) .r57-scroll-state span { font-size: 11px !important; }
+body.r74-layout:is([data-r74-profile="phone-portrait"],[data-r74-profile="phone-short"]) .r57-scroll-unit-head strong { white-space: normal !important; }
+body.r74-layout:is([data-r74-profile="phone-portrait"],[data-r74-profile="phone-short"]) #arena-phase .phase-heading p { display: none !important; }
+body.r74-layout:is([data-r74-profile="phone-portrait"],[data-r74-profile="phone-short"]) .arena-roll-card { grid-template-rows: 28dvh auto auto auto !important; }
+body.r74-layout:is([data-r74-profile="phone-portrait"],[data-r74-profile="phone-short"]) #battle-phase { padding-top: 0 !important; }
+body.r74-layout:is([data-r74-profile="phone-portrait"],[data-r74-profile="phone-short"]) #arena-p1,
+body.r74-layout:is([data-r74-profile="phone-portrait"],[data-r74-profile="phone-short"]) #arena-p2 { height: clamp(150px, 43vw, 190px) !important; min-height: 0 !important; }
+body.r74-layout:is([data-r74-profile="phone-portrait"],[data-r74-profile="phone-short"]) .roster-console { max-height: none !important; }
+
+/* Very short phones reserve space for the coach and current action. */
+body.r74-layout[data-r74-profile="phone-short"] .draft-portrait-frame { height: 91px !important; }
+body.r74-layout[data-r74-profile="phone-short"][data-r74-mode="tutorial"] .draft-portrait-frame { height: 72px !important; }
+body.r74-layout[data-r74-profile="phone-short"] .draft-affiliation-row,
+body.r74-layout[data-r74-profile="phone-short"] .draft-odds-compact { padding: 2px 4px !important; margin: 2px 0 !important; }
+body.r74-layout[data-r74-profile="phone-short"] .r57-scroll-state span { font-size: 10px !important; }
+
+/* Landscape phone is a real, compact three-column layout. */
+body.r74-layout[data-r74-profile="phone-landscape"] {
+  --r74-gap: 4px;
+}
+body.r74-layout[data-r74-profile="phone-landscape"] #r27-phase-rail,
+body.r74-layout[data-r74-profile="phone-landscape"] .r57-header-center,
+body.r74-layout[data-r74-profile="phone-landscape"] .command-overline,
+body.r74-layout[data-r74-profile="phone-landscape"] #game-status { display: none !important; }
+body.r74-layout[data-r74-profile="phone-landscape"] .command-header {
+  min-height: 39px !important;
+  padding: calc(2px + var(--r74-top)) calc(6px + var(--r74-right)) 2px calc(6px + var(--r74-left)) !important;
+}
+body.r74-layout[data-r74-profile="phone-landscape"] #app-match-exit-btn:not(.hidden) {
+  position: fixed !important;
+  top: calc(2px + var(--r74-top)) !important;
+  bottom: auto !important;
+  left: 50% !important;
+  right: auto !important;
+  transform: translateX(-50%) !important;
+  min-height: 36px !important;
+  height: 36px !important;
+  padding: 0 8px !important;
+  font-size: 11px !important;
+}
+body.r74-layout[data-r74-profile="phone-landscape"] #main-container { padding: 3px calc(5px + var(--r74-right)) calc(4px + var(--r74-bottom)) calc(5px + var(--r74-left)) !important; }
+body.r74-layout[data-r74-profile="phone-landscape"] #draft-phase { padding: 0 !important; }
+body.r74-layout[data-r74-profile="phone-landscape"] .draft-stage-header { padding: 3px 5px !important; }
+body.r74-layout[data-r74-profile="phone-landscape"] .draft-instruction,
+body.r74-layout[data-r74-profile="phone-landscape"] .draft-chip-row,
+body.r74-layout[data-r74-profile="phone-landscape"] .draft-composition-hints,
+body.r74-layout[data-r74-profile="phone-landscape"] .draft-action-note { display: none !important; }
+body.r74-layout[data-r74-profile="phone-landscape"] .draft-turn-title { font-size: 15px !important; margin: 0 !important; }
+body.r74-layout[data-r74-profile="phone-landscape"] .draft-board-grid {
+  grid-template-columns: minmax(82px, 1fr) minmax(220px, 2.4fr) minmax(82px, 1fr) !important;
+  grid-template-areas: "p1 card p2" !important;
+  gap: 4px !important;
+}
+body.r74-layout[data-r74-profile="phone-landscape"] .draft-team-panel { padding: 3px !important; }
+body.r74-layout[data-r74-profile="phone-landscape"] .draft-team-panel-head { margin-bottom: 2px !important; font-size: 10px !important; }
+body.r74-layout[data-r74-profile="phone-landscape"] .draft-team-slots { gap: 2px !important; grid-template-columns: 1fr !important; }
+body.r74-layout[data-r74-profile="phone-landscape"] .draft-team-slot { height: 33px !important; min-height: 33px !important; padding: 2px !important; }
+body.r74-layout[data-r74-profile="phone-landscape"] .draft-team-slot img { width: 28px !important; height: 28px !important; }
+body.r74-layout[data-r74-profile="phone-landscape"] .draft-slot-name { display: none !important; }
+body.r74-layout[data-r74-profile="phone-landscape"] .draft-card-v2 { padding: 4px !important; }
+body.r74-layout[data-r74-profile="phone-landscape"] .draft-portrait-frame { height: clamp(51px, 20dvh, 82px) !important; min-height: 0 !important; margin-bottom: 2px !important; }
+body.r74-layout[data-r74-profile="phone-landscape"] .draft-character-name { font-size: 14px !important; }
+body.r74-layout[data-r74-profile="phone-landscape"] .draft-affiliation-row,
+body.r74-layout[data-r74-profile="phone-landscape"] .draft-odds-compact { padding: 2px 4px !important; margin: 2px 0 !important; font-size: 11px !important; }
+body.r74-layout[data-r74-profile="phone-landscape"] .draft-action-btn { min-height: 38px !important; padding: 3px !important; }
+body.r74-layout[data-r74-profile="phone-landscape"] .draft-action-btn > span { font-size: 12px !important; }
+body.r74-layout[data-r74-profile="phone-landscape"] #scroll-phase .phase-heading p { display: none !important; }
+body.r74-layout[data-r74-profile="phone-landscape"] #scroll-turn-text { font-size: 15px !important; }
+body.r74-layout[data-r74-profile="phone-landscape"] .scroll-kit-panel { padding: 3px 6px !important; max-height: 100px; }
+body.r74-layout[data-r74-profile="phone-landscape"] .scroll-kit-panel > h4 { display: none !important; }
+body.r74-layout[data-r74-profile="phone-landscape"] #scroll-team-grid { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; gap: 4px !important; }
+body.r74-layout[data-r74-profile="phone-landscape"] .r57-scroll-fighter { min-height: 52px !important; grid-template-columns: 32px minmax(0, 1fr) !important; }
+body.r74-layout[data-r74-profile="phone-landscape"] .r57-scroll-portrait { width: 30px !important; height: 40px !important; }
+body.r74-layout[data-r74-profile="phone-landscape"] .r57-scroll-state span { font-size: 10px !important; }
+body.r74-layout[data-r74-profile="phone-landscape"] #confirm-scroll-btn { min-height: 40px !important; }
+body.r74-layout[data-r74-profile="phone-landscape"] #arena-phase { flex-direction: row !important; flex-wrap: wrap; align-content: flex-start; align-items: center; }
+body.r74-layout[data-r74-profile="phone-landscape"] #arena-phase .phase-heading { width: 100%; margin: 0 !important; }
+body.r74-layout[data-r74-profile="phone-landscape"] #arena-phase .phase-heading p,
+body.r74-layout[data-r74-profile="phone-landscape"] #arena-roll-strip { display: none !important; }
+body.r74-layout[data-r74-profile="phone-landscape"] #arena-roll-window { width: min(60%, 390px) !important; min-width: 0 !important; }
+body.r74-layout[data-r74-profile="phone-landscape"] .arena-roll-card { grid-template-rows: min(18dvh, 75px) auto auto auto !important; }
+body.r74-layout[data-r74-profile="phone-landscape"] .arena-roll-art,
+body.r74-layout[data-r74-profile="phone-landscape"] .arena-roll-placeholder { height: min(18dvh, 75px) !important; }
+body.r74-layout[data-r74-profile="phone-landscape"] #arena-phase :is(#roll-arena-btn,#enter-battle-btn) {
+  width: min(470px, calc(100vw - var(--r74-left) - var(--r74-right) - 16px)) !important;
+}
+body.r74-layout[data-r74-profile="phone-landscape"] .r57-battle-score { margin-bottom: 3px !important; padding: 3px !important; }
+body.r74-layout[data-r74-profile="phone-landscape"] #arena-context-panel { padding: 3px 6px !important; margin-bottom: 3px !important; }
+body.r74-layout[data-r74-profile="phone-landscape"] #arena-context-desc,
+body.r74-layout[data-r74-profile="phone-landscape"] #arena-context-tags { display: none !important; }
+body.r74-layout[data-r74-profile="phone-landscape"] #battle-turn-indicator { margin-bottom: 3px !important; padding: 3px !important; }
+body.r74-layout[data-r74-profile="phone-landscape"] .battle-desk-grid { grid-template-columns: minmax(105px, 1fr) minmax(230px, 2.3fr) minmax(105px, 1fr) !important; gap: 4px !important; }
+body.r74-layout[data-r74-profile="phone-landscape"] .combat-table { grid-column: 2 !important; grid-row: 1 !important; padding: 4px !important; }
+body.r74-layout[data-r74-profile="phone-landscape"] #p1-roster-box { grid-column: 1; grid-row: 1; }
+body.r74-layout[data-r74-profile="phone-landscape"] #p2-roster-box { grid-column: 3; grid-row: 1; }
+body.r74-layout[data-r74-profile="phone-landscape"] .roster-console { max-height: 58dvh !important; padding: 3px !important; }
+body.r74-layout[data-r74-profile="phone-landscape"] .arena-slot { width: min(16vw, 90px) !important; height: min(35dvh, 133px) !important; min-height: 0 !important; }
+body.r74-layout[data-r74-profile="phone-landscape"] #lore-duel-strip { display: none !important; }
+
+/* Density flags affect only geometry; they do not change gameplay or content. */
+body.r74-layout[data-r74-density="short"]:not([data-r74-profile="phone-landscape"]) .phase-heading { margin-bottom: 5px !important; }
+body.r74-layout[data-r74-density="short"]:not([data-r74-profile="phone-landscape"]) .draft-portrait-frame { max-height: 20dvh !important; }
+body.r74-layout[data-r74-density="short"]:not([data-r74-profile="phone-landscape"]) .draft-team-slot { max-height: 48px !important; }
+body.r74-layout[data-r74-density="short"] #arena-phase .phase-heading p { display: none !important; }
+body.r74-layout[data-r74-density="short"] .arena-roll-art,
+body.r74-layout[data-r74-density="short"] .arena-roll-placeholder { max-height: 22dvh !important; }
+@media (prefers-reduced-motion: reduce) {
+  body.r74-layout #scroll-team-grid, body.r74-layout #scroll-inventory { scroll-behavior: auto; }
+}
+
+/* R74: the VK iframe must be able to scroll when the contents are taller than it. */
+body.r74-layout .phase-shell {
+  clip-path: none !important;
+  animation: none !important;
+  transform: none !important;
+}
+body.r74-layout[data-r74-phase="scroll"] {
+  height: auto !important;
+  min-height: 100dvh !important;
+  overflow-y: auto !important;
+}
+body.r74-layout[data-r74-phase="scroll"] #main-container {
+  flex: 1 0 auto !important;
+  overflow: visible !important;
+  min-height: 0 !important;
+}
+body.r74-layout #scroll-phase {
+  height: auto !important;
+  flex: 0 0 auto !important;
+  overflow: visible !important;
+  clip-path: none !important;
+  animation: none !important;
+  transform: none !important;
+  padding-bottom: calc(86px + var(--r74-bottom)) !important;
+}
+body.r74-layout #scroll-selection-area {
+  display: flex !important;
+  flex: 0 0 auto !important;
+  flex-direction: column !important;
+  overflow: visible !important;
+}
+body.r74-layout #scroll-selection-area.hidden { display: none !important; }
+body.r74-layout .scroll-kit-panel {
+  width: 100% !important;
+  max-height: none !important;
+  overflow: visible !important;
+}
+body.r74-layout #scroll-team-grid {
+  flex: 0 0 auto !important;
+  grid-auto-rows: auto !important;
+  max-height: none !important;
+  overflow-y: visible !important;
+  padding-bottom: 4px !important;
+}
+body.r74-layout[data-r74-phase="scroll"] #confirm-scroll-btn {
+  position: fixed !important;
+  left: 50% !important;
+  bottom: calc(8px + var(--r74-bottom)) !important;
+  z-index: 125 !important;
+  width: min(470px, calc(100vw - 20px - var(--r74-left) - var(--r74-right))) !important;
+  min-height: 50px !important;
+  margin: 0 !important;
+  transform: translateX(-50%) !important;
+  box-shadow: 0 12px 40px #020617, 0 0 0 2px #0b121d !important;
+  touch-action: manipulation;
+}
+body.r74-layout #confirm-scroll-btn:not(:disabled) { pointer-events: auto !important; }
+body.r74-layout .r74-scroll-lineup,
+body.r74-layout .r74-roster-lineup {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 4px !important;
+  min-width: 0 !important;
+}
+body.r74-layout .r74-scroll-lineup { margin: 0 0 5px !important; }
+body.r74-layout .r74-scroll-person,
+body.r74-layout .r74-roster-person {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  padding: 2px 4px !important;
+  border-radius: 6px !important;
+  background: #182432 !important;
+  color: #e2e8f0 !important;
+  font-size: 11px !important;
+  line-height: 1.2 !important;
+  overflow-wrap: anywhere !important;
+}
+body.r74-layout .r74-scroll-person img,
+body.r74-layout .r74-roster-person img {
+  flex: 0 0 24px !important;
+  width: 24px !important;
+  height: 28px !important;
+  object-fit: contain !important;
+  background: #050a10 !important;
+}
+
+/* The composite occupies a complete row: neither art nor title is clipped. */
+body.r74-layout .draft-board-grid {
+  grid-template-columns: minmax(205px, 235px) minmax(320px, 500px) minmax(205px, 235px) !important;
+}
+body.r74-layout .draft-team-slot.r57-composite-draft {
+  height: auto !important;
+  min-height: 114px !important;
+  max-height: none !important;
+  overflow: visible !important;
+  display: grid !important;
+  grid-template-columns: 82px minmax(0, 1fr) !important;
+  gap: 7px !important;
+  text-align: left !important;
+  padding: 6px !important;
+  clip-path: none !important;
+}
+body.r74-layout .r57-composite-portraits {
+  width: 82px !important;
+  height: 88px !important;
+  min-height: 88px !important;
+  overflow: hidden !important;
+}
+body.r74-layout .r57-composite-portraits img {
+  width: 100% !important;
+  height: 86px !important;
+  min-width: 0 !important;
+  object-fit: contain !important;
+}
+body.r74-layout .r57-composite-portraits:is(.count-3,.count-4) img { height: 42px !important; }
+body.r74-layout[data-r74-density="short"] .draft-team-slot.r57-composite-draft { max-height: none !important; }
+body.r74-layout .r57-composite-copy { gap: 2px !important; min-width: 0 !important; text-align: left !important; }
+body.r74-layout .r57-composite-tag { font-size: 10px !important; line-height: 1.2 !important; }
+body.r74-layout .r57-composite-copy strong { font-size: 13px !important; line-height: 1.18 !important; overflow-wrap: anywhere !important; }
+body.r74-layout .r57-composite-copy small,
+body.r74-layout .r74-composite-names {
+  display: block !important;
+  color: #cbd5e1 !important;
+  font-size: 11px !important;
+  line-height: 1.2 !important;
+  white-space: normal !important;
+  overflow-wrap: anywhere !important;
+}
+body.r74-layout .r74-composite-names { color: #fde68a !important; }
+body.r74-layout .draft-composition-hints:not(.hidden) { display: grid !important; gap: 3px !important; }
+body.r74-layout .draft-hint-row { display: grid !important; grid-template-columns: 1fr !important; gap: 2px !important; padding: 4px 6px !important; }
+body.r74-layout .draft-hint-row span,
+body.r74-layout .draft-hint-row strong { font-size: 11px !important; line-height: 1.25 !important; text-align: left !important; white-space: normal !important; }
+
+/* Every battle card keeps its artwork, name, formation and effect in view. */
+body.r74-layout .roster-console { max-height: min(61dvh, 560px) !important; }
+body.r74-layout .r57-roster-card-head {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  gap: 3px !important;
+  padding: 3px 3px 7px !important;
+}
+body.r74-layout .r57-roster-card-head span { font-size: 11px !important; }
+body.r74-layout .r57-roster-card-head strong {
+  max-width: 100% !important;
+  white-space: normal !important;
+  text-overflow: clip !important;
+  overflow: visible !important;
+  overflow-wrap: anywhere !important;
+  line-height: 1.18 !important;
+}
+body.r74-layout .r57-roster-card-head small {
+  display: block !important;
+  font-size: 11px !important;
+  line-height: 1.2 !important;
+  overflow-wrap: anywhere !important;
+}
+body.r74-layout .r57-roster-card-head .r74-roster-lineup { width: 100% !important; }
+body.r74-layout .r57-roster-member-copy strong { white-space: normal !important; overflow-wrap: anywhere !important; }
+body.r74-layout .r57-roster-member-copy small { display: block !important; overflow-wrap: anywhere !important; }
+body.r74-layout .arena-slot { width: clamp(150px, 15vw, 210px) !important; height: clamp(190px, 30dvh, 310px) !important; }
+body.r74-layout .r74-arena-link {
+  position: absolute !important;
+  top: 37px !important;
+  left: 5px !important;
+  right: 5px !important;
+  z-index: 15 !important;
+  padding: 3px 5px !important;
+  border: 1px solid #b98939 !important;
+  background: rgba(25, 17, 6, .94) !important;
+  color: #fde68a !important;
+  font-size: 10px !important;
+  font-weight: 800 !important;
+  line-height: 1.16 !important;
+  text-align: center !important;
+  overflow-wrap: anywhere !important;
+  pointer-events: none !important;
+}
+body.r74-layout .r74-arena-supports {
+  position: absolute !important;
+  top: 72px !important;
+  right: 5px !important;
+  z-index: 10 !important;
+  display: flex !important;
+  gap: 2px !important;
+  max-width: calc(100% - 10px) !important;
+  padding: 2px !important;
+  border: 1px solid #b98939 !important;
+  background: rgba(3, 7, 12, .84) !important;
+  pointer-events: none !important;
+}
+body.r74-layout .r74-arena-supports img {
+  width: 39px !important;
+  height: 46px !important;
+  object-fit: contain !important;
+  background: #070d15 !important;
+}
+body.r74-layout .lore-duel-card small { display: block !important; white-space: normal !important; overflow-wrap: anywhere !important; }
+
+/* Compact layouts still reserve a full row for a link and scroll naturally. */
+body.r74-layout:is([data-r74-profile="phone-portrait"],[data-r74-profile="phone-short"]) .draft-board-grid {
+  grid-template-columns: minmax(0, 1fr) !important;
+}
+body.r74-layout[data-r74-profile="tablet"] .draft-team-slot.r57-composite-draft { grid-column: span 2 !important; }
+body.r74-layout:is([data-r74-profile="phone-portrait"],[data-r74-profile="phone-short"]) .draft-team-slot.r57-composite-draft {
+  grid-column: 1 / -1 !important;
+  min-height: 108px !important;
+}
+body.r74-layout:is([data-r74-profile="phone-portrait"],[data-r74-profile="phone-short"]) .draft-team-slot.r57-composite-draft img {
+  width: 100% !important;
+  height: 86px !important;
+}
+body.r74-layout:is([data-r74-profile="phone-portrait"],[data-r74-profile="phone-short"]) .draft-team-slot.r57-composite-draft .r57-composite-portraits:is(.count-3,.count-4) img { height: 42px !important; }
+body.r74-layout:is([data-r74-profile="phone-portrait"],[data-r74-profile="phone-short"]) .r57-roster-card-head { display: flex !important; }
+body.r74-layout:is([data-r74-profile="phone-portrait"],[data-r74-profile="phone-short"]) #scroll-team-grid { grid-template-columns: minmax(0, 1fr) !important; }
+body.r74-layout[data-r74-profile="phone-landscape"] .draft-team-panel {
+  max-height: calc(100dvh - 112px) !important;
+  overflow-y: auto !important;
+}
+body.r74-layout[data-r74-profile="phone-landscape"] .draft-team-slot.r57-composite-draft {
+  grid-template-columns: minmax(0, 1fr) !important;
+  min-height: 104px !important;
+  padding: 3px !important;
+  gap: 3px !important;
+}
+body.r74-layout[data-r74-profile="phone-landscape"] .r57-composite-portraits { width: 100% !important; height: 39px !important; min-height: 39px !important; }
+body.r74-layout[data-r74-profile="phone-landscape"] .r57-composite-portraits img,
+body.r74-layout[data-r74-profile="phone-landscape"] .r57-composite-portraits:is(.count-3,.count-4) img { height: 36px !important; }
+body.r74-layout[data-r74-profile="phone-landscape"] .r57-composite-copy small { display: none !important; }
+body.r74-layout[data-r74-profile="phone-landscape"] .draft-team-slot.r57-composite-draft .r57-composite-copy strong { font-size: 11px !important; }
+body.r74-layout[data-r74-profile="phone-landscape"] .draft-team-slot.r57-composite-draft .r74-composite-names { font-size: 10px !important; }
+body.r74-layout[data-r74-profile="phone-landscape"] .draft-composition-hints:not(.hidden) { display: grid !important; }
+body.r74-layout[data-r74-profile="phone-landscape"] #lore-duel-strip:not(.hidden) { display: grid !important; }
+body.r74-layout[data-r74-profile="phone-landscape"] .arena-slot { width: clamp(100px, 15vw, 148px) !important; height: min(39dvh, 154px) !important; }
+body.r74-layout[data-r74-profile="phone-landscape"] .roster-console { max-height: 58dvh !important; }
+body.r74-layout[data-r74-profile="phone-landscape"] .r74-roster-person { font-size: 10px !important; }
+body.r74-layout[data-r74-profile="phone-landscape"] .r74-arena-link { top: 29px !important; font-size: 9px !important; }
+body.r74-layout[data-r74-profile="phone-landscape"] .r74-arena-supports { top: 54px !important; }
+body.r74-layout[data-r74-profile="phone-landscape"] .r74-arena-supports img { width: 27px !important; height: 30px !important; }
+body.r74-layout[data-r74-profile="phone-landscape"] #scroll-team-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+@media (max-width: 560px) {
+  body.r74-layout[data-r74-profile="phone-landscape"] #scroll-team-grid { grid-template-columns: minmax(0, 1fr) !important; }
+}

@@ -1,7 +1,7 @@
-/* R73: one lightweight presentation controller for the complete match. */
+/* R74: one lightweight presentation controller for the complete match. */
 (function () {
   'use strict';
-  const VERSION = 73;
+  const VERSION = 74;
   const $ = id => document.getElementById(id);
   const phaseIds = {
     hub: 'command-hub', initiative: 'initiative-phase', draft: 'draft-phase',
@@ -64,14 +64,21 @@
     const key = [v.width, v.height, profile, currentMode, currentDensity, currentPhase].join(':');
     if (key === lastKey) return;
     lastKey = key;
-    body.classList.add('r73-layout');
-    body.dataset.r73Profile = profile;
-    body.dataset.r73Mode = currentMode;
-    body.dataset.r73Density = currentDensity;
-    body.dataset.r73Phase = currentPhase;
+    const previousPhase = body.dataset.r74Phase;
+    body.classList.add('r74-layout');
+    body.dataset.r74Profile = profile;
+    body.dataset.r74Mode = currentMode;
+    body.dataset.r74Density = currentDensity;
+    body.dataset.r74Phase = currentPhase;
     placeFightButton();
     placeCoach(currentPhase, currentMode, profile);
-    document.dispatchEvent(new CustomEvent('r73:layout', {
+    if (previousPhase && previousPhase !== currentPhase) {
+      const scroller = document.scrollingElement;
+      if (scroller) scroller.scrollTop = 0;
+      const main = $('main-container');
+      if (main) main.scrollTop = 0;
+    }
+    document.dispatchEvent(new CustomEvent('r74:layout', {
       detail: { version: VERSION, viewport: v, profile, mode: currentMode, density: currentDensity, phase: currentPhase }
     }));
   }
@@ -94,14 +101,14 @@
     });
     return Object.freeze({
       version: VERSION, viewport: v, phase: currentPhase,
-      profile: document.body.dataset.r73Profile, mode: document.body.dataset.r73Mode,
+      profile: document.body.dataset.r74Profile, mode: document.body.dataset.r74Mode,
       horizontalOverflowPx: Math.max(0, Math.ceil(document.documentElement.scrollWidth - v.width)),
       actions: controls, scrollAreaHeight: scrollArea ? Math.round(scrollArea.getBoundingClientRect().height) : 0
     });
   }
   function start() {
-    coachAnchor = anchor(coach, 'r73-coach-home');
-    fightAnchor = anchor(fight, 'r73-fight-home');
+    coachAnchor = anchor(coach, 'r74-coach-home');
+    fightAnchor = anchor(fight, 'r74-fight-home');
     update();
     document.addEventListener('r27:phase-change', schedule);
     document.addEventListener('r34:mode-change', schedule);
@@ -115,7 +122,7 @@
       restore(coach, coachAnchor);
     }, { once: true });
   }
-  window.R73_LAYOUT = Object.freeze({ version: VERSION, refresh: schedule, audit, viewport });
+  window.R74_LAYOUT = Object.freeze({ version: VERSION, refresh: schedule, audit, viewport });
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start, { once: true });
   else start();
 })();

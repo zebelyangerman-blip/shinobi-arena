@@ -36055,7 +36055,7 @@ function createDraftSoloElement(fighter,playerNum){
 function createDraftCompositeElement(unit,playerNum){
   const card=unit.card,members=unit.members,slot=document.createElement('article');slot.className=`draft-team-slot filled player-${playerNum} r57-composite-draft r57-${card.kind}`;slot.dataset.loreCardId=card.id;
   const portraits=document.createElement('div');portraits.className=`r57-composite-portraits count-${members.length}`;members.forEach(f=>portraits.appendChild(r57Portrait(f)));
-  const copy=document.createElement('div');copy.className='r57-composite-copy';const tag=document.createElement('span');tag.className='r57-composite-tag';tag.textContent=card.kind==='group'?'КОМАНДНАЯ КАРТА':'СВЯЗЬ';const title=document.createElement('strong');title.textContent=card.title;const count=document.createElement('small');count.textContent=`${members.length} бойца · 1 карта · ${card.effectLabel||'канонический эффект'}`;copy.append(tag,title,count);slot.append(portraits,copy);return slot;
+  const copy=document.createElement('div');copy.className='r57-composite-copy';const tag=document.createElement('span');tag.className='r57-composite-tag';tag.textContent=card.kind==='group'?'КОМАНДА · 1 ЖИЗНЬ':'СВЯЗЬ · 1 ЖИЗНЬ';const title=document.createElement('strong');title.textContent=card.title;const names=document.createElement('span');names.className='r74-composite-names';names.textContent=members.map(f=>f.name).join(' + ');const count=document.createElement('small');count.textContent=`${card.effectLabel||'Канонический эффект'} · ${members.length} бойца в одной карте`;copy.append(tag,title,names,count);slot.append(portraits,copy);return slot;
 }
 function createDraftEmptyElement(index,playerNum){const slot=document.createElement('article');slot.className=`draft-team-slot empty player-${playerNum}`;slot.dataset.slotIndex=String(index);const n=document.createElement('span');n.className='draft-slot-number';n.textContent='+';const e=document.createElement('span');e.className='draft-slot-empty';e.textContent='СВОБОДНО';slot.append(n,e);return slot;}
 function renderDraftTeamSlots(team,containerId,playerNum){
@@ -36078,7 +36078,7 @@ function renderDraftHints(character){
   const rows=[];
   const pushRows=(model,label,kind)=>{const cards=[...model.groups,...model.pairs].slice(0,2);cards.forEach(card=>rows.push({label,kind,card}));};
   pushRows(own,'ЗАБРАТЬ','keep');pushRows(opp,'ОТДАТЬ','pass');
-  rows.slice(0,2).forEach(item=>{const row=document.createElement('div');row.className=`draft-hint-row r57-lore-hint ${item.kind}`;const left=document.createElement('span');left.textContent=`${item.label}: ${item.card.kind==='group'?'команда':'связь'}`;const value=document.createElement('strong');value.textContent=`${item.card.title} · ${item.card.effectLabel||'связь'}`;row.append(left,value);box.appendChild(row);});
+  rows.forEach(item=>{const row=document.createElement('div');row.className=`draft-hint-row r57-lore-hint ${item.kind}`;const left=document.createElement('span');left.textContent=`${item.label} → ${item.card.kind==='group'?'КОМАНДА':'СВЯЗЬ'} · 1 карта / 1 жизнь`;const roster=[character,...(item.kind==='keep'?getDraftTeam(currentPlayer):getDraftOpponentTeam(currentPlayer))];const names=(item.card.members||[]).map(uid=>roster.find(f=>f.uid===uid)?.name).filter(Boolean).join(' + ');const value=document.createElement('strong');value.textContent=`${item.card.title} · ${names} · ${item.card.effectLabel||'канонический эффект'}`;row.append(left,value);box.appendChild(row);});
   box.classList.toggle('hidden',rows.length===0);
 }
 function updateDraftProgressUI(){
@@ -36421,13 +36421,15 @@ function startScrollPhase() {
 
 function setupScrollTurn() {
     selectedInventoryScrollIndex = null;
+    const selection=document.getElementById('scroll-selection-area');if(selection)selection.classList.add('hidden');
+    const confirmBeforeRoll=document.getElementById('confirm-scroll-btn');if(confirmBeforeRoll){confirmBeforeRoll.disabled=true;confirmBeforeRoll.classList.add('pointer-events-none');}
     if(isLocalTwoPlayerMode()&&localScrollHandoffConfirmedFor!==Number(currentScrollPlayer)){showLocalScrollHandoff(currentScrollPlayer);return;}
     if(isLocalTwoPlayerMode())localScrollHandoffConfirmedFor=0;
     const cpuTurn = typeof isCpuControlledPlayer === 'function' && isCpuControlledPlayer(currentScrollPlayer);
     document.getElementById('roll-scrolls-btn').classList.toggle('hidden', cpuTurn);
     document.getElementById('scroll-selection-area').classList.toggle('hidden', !cpuTurn);
     const policy = getScrollDrawPolicy(currentScrollPlayer);
-    document.getElementById('scroll-turn-text').innerText = cpuTurn ? `${typeof getPlayerDisplayName==='function'?getPlayerDisplayName(currentScrollPlayer):'CPU'} готовит закрытый тактический комплект…` : `Игрок ${currentScrollPlayer}: выпадет ${policy.candidateCount} свитк${policy.candidateCount===1?'ок':policy.candidateCount<5?'а':'ов'}; назначьте любому числу бойцов от 0 до ${policy.maxEquipped}`;
+    document.getElementById('scroll-turn-text').innerText = cpuTurn ? `${typeof getPlayerDisplayName==='function'?getPlayerDisplayName(currentScrollPlayer):'CPU'} готовит комплект…` : `Игрок ${currentScrollPlayer} · свитков: ${policy.candidateCount} · назначить 0–${policy.maxEquipped}`;
     document.getElementById('scroll-turn-text').className = `text-lg md:text-xl mb-6 font-bold text-center ${currentScrollPlayer === 1 ? 'text-blue-400' : 'text-orange-400'}`;
     if (cpuTurn) {
         const inv=document.getElementById('scroll-inventory'); if(inv) inv.innerHTML='<div class="cpu-scroll-conceal"><b>CPU анализирует кандидатов</b><span>Его выбранные свитки скрыты до срабатывания.</span></div>';
@@ -36435,6 +36437,8 @@ function setupScrollTurn() {
         const confirm=document.getElementById('confirm-scroll-btn'); if(confirm){confirm.disabled=true;confirm.classList.add('opacity-40','pointer-events-none');confirm.textContent='CPU ГОТОВИТСЯ…';}
         const status=document.getElementById('scroll-assignment-status');if(status)status.textContent='Подготовка второго игрока';
         if (typeof cpuMaybeHandleScrollTurn==='function') cpuMaybeHandleScrollTurn();
+    } else {
+        const confirm=document.getElementById('confirm-scroll-btn');if(confirm){confirm.disabled=true;confirm.classList.add('opacity-40','pointer-events-none');confirm.textContent='СНАЧАЛА ПОЛУЧИТЕ СВИТКИ';}
     }
 }
 
@@ -36541,8 +36545,9 @@ function renderScrollPhaseUI() {
         const wrap=document.createElement('article');wrap.className=`r57-scroll-unit ${unit.kind==='composite'?'composite':'solo'}`;
         if(unit.kind==='composite'){
             const head=document.createElement('header');head.className='r57-scroll-unit-head';head.innerHTML=`<span>${unit.card.kind==='group'?'КОМАНДНАЯ КАРТА':'СВЯЗЬ'}</span><strong>${unit.card.title}</strong><small></small>`;
-            head.querySelector('small').textContent=`${unit.members.map(member=>member.name).join(' + ')} · ${unit.card.effectLabel||'Канонический эффект'}`;
+            head.querySelector('small').textContent=`${unit.card.effectLabel||'Канонический эффект'} · ${unit.members.length} бойца / 1 жизнь`;
             wrap.appendChild(head);
+            const lineup=document.createElement('div');lineup.className='r74-scroll-lineup';unit.members.forEach(member=>{const person=document.createElement('span');person.className='r74-scroll-person';const portrait=r57Portrait(member);portrait.alt='';const label=document.createElement('span');label.textContent=member.name;person.append(portrait,label);lineup.appendChild(person);});wrap.appendChild(lineup);
         }
         const memberGrid=document.createElement('div');memberGrid.className='r57-scroll-members';
         const leader=globalThis.COMPOSITE_CARDS?.getLeaderForUnit?.(unit,currentScrollPlayer)||unit.members[0];
@@ -36590,8 +36595,11 @@ function attachOrDetachScroll(charIndex) {
 }
 
 function nextScrollTurn() {
+    const phase=document.getElementById('scroll-phase'),area=document.getElementById('scroll-selection-area');
+    if(!phase||phase.classList.contains('hidden')||!area||area.classList.contains('hidden'))return false;
     const team = currentScrollPlayer === 1 ? p1Team : p2Team;
-    if (getEquippedScrollCount(team) > getScrollDrawPolicy(currentScrollPlayer).maxEquipped) { renderScrollPhaseUI(); return; }
+    if (getEquippedScrollCount(team) > getScrollDrawPolicy(currentScrollPlayer).maxEquipped) { renderScrollPhaseUI(); return false; }
+    const confirm=document.getElementById('confirm-scroll-btn');if(confirm){confirm.disabled=true;confirm.classList.add('pointer-events-none');}
     scrollTurnsCount++;
     if (scrollTurnsCount < 2) {
         currentScrollPlayer = currentScrollPlayer === 1 ? 2 : 1;
@@ -36599,6 +36607,7 @@ function nextScrollTurn() {
     } else {
         startArenaPhaseR61();
     }
+    return true;
 }
 
 ;/* module: js/battle-engine.js */
@@ -36775,8 +36784,11 @@ function startBattlePhase() {
                 const wrapper=document.createElement('article');wrapper.className=`r57-roster-card ${unit.kind==='composite'?'composite':'solo'} player-${playerNum}`;
                 if(unit.kind==='composite'){
                     const head=document.createElement('header');head.className='r57-roster-card-head';
-                    const supports=(unit.supports||[]).map(f=>`<img src="${getCharThumbSrc(f)}" alt="" title="${f.name}">`).join('');
-                    head.innerHTML=`<span>${unit.card.kind==='group'?'КОМАНДНАЯ КАРТА':'СВЯЗЬ'} · 1 ЖИЗНЬ</span><strong>${unit.card.title}</strong><small>Лидер: ${leader.name} · ${unit.card.effectLabel||'канонический эффект'}</small>${supports?`<div class="r63-support-strip">${supports}</div>`:''}`;wrapper.appendChild(head);
+                    const tag=document.createElement('span');tag.textContent=`${unit.card.kind==='group'?'КОМАНДА':'СВЯЗЬ'} · 1 КАРТА / 1 ЖИЗНЬ`;
+                    const title=document.createElement('strong');title.textContent=unit.card.title;
+                    const effect=document.createElement('small');effect.textContent=unit.card.effectLabel||'Канонический эффект';
+                    const lineup=document.createElement('div');lineup.className='r74-roster-lineup';unit.members.forEach(f=>{const member=document.createElement('span');member.className='r74-roster-person';const img=r57Portrait(f);img.alt='';const name=document.createElement('span');name.textContent=f.name;member.append(img,name);lineup.appendChild(member);});
+                    head.append(tag,title,effect,lineup);wrapper.appendChild(head);
                 }
                 const memberGrid=document.createElement('div');memberGrid.className='r57-roster-members';const index=team.indexOf(leader),state=getFighterState(leader),active=isFighterActive(leader),isSelected=(playerNum===1&&arenaSlot1===leader)||(playerNum===2&&arenaSlot2===leader),isMyTurnToPick=playerNum===activePicker,humanCanPick=isMyTurnToPick&&!(typeof isCpuControlledPlayer==='function'&&isCpuControlledPlayer(playerNum));
                 const div=document.createElement('div');div.className=`r57-roster-member ${isSelected?'selected':''} ${!active?'dead-card':humanCanPick?'pickable':isMyTurnToPick?'cpu-roster-thinking':'waiting'}`;
@@ -36808,12 +36820,19 @@ function startBattlePhase() {
                 if (char) {
                     const fighterArt=getCharImgSrc(char);
                     const scrollMasked=typeof cpuShouldMaskScrollForViewer==='function'&&cpuShouldMaskScrollForViewer(playerNum)&&char.scroll&&isScrollReady(char.scroll);
+                    const linkState=globalThis.LORE_COMBAT?.getDisplayState?.(playerNum,playerNum===1?p1Team:p2Team,char.uid);
+                    const linkCard=linkState?.card;
+                    const team=playerNum===1?p1Team:p2Team;
+                    const linkSupports=linkCard?(linkCard.members||[]).filter(uid=>uid!==char.uid).map(uid=>team.find(f=>f.uid===uid)).filter(Boolean):[];
+                    const supportArt=linkSupports.map(f=>`<img src="${getCharThumbSrc(f)}" alt="Поддержка: ${f.name}" title="${f.name}" loading="lazy" decoding="async">`).join('');
                     el.innerHTML = `
                         <img src="${fighterArt}" alt="" aria-hidden="true" class="arena-card-backdrop" decoding="async">
                         <img src="${fighterArt}" alt="${char.name}" class="arena-card-art char-img" ${typeof r21ImageAttrs==='function'?r21ImageAttrs(true):'decoding="async"'} data-fallback-emoji="${char.emoji}">
                         <div class="arena-card-gradient"></div>
                         <span class="arena-card-name border-${colorClass}-500/50">${char.name} ${isLocked ? '🔒' : ''}</span>
                         <div class="arena-state-badge">${getFighterStateName(char)}</div>
+                        ${linkCard?`<div class="r74-arena-link">${linkCard.kind==='group'?'КОМАНДА':'СВЯЗЬ'} · ${linkCard.title}</div>`:''}
+                        ${supportArt?`<div class="r74-arena-supports" aria-label="Участники связи">${supportArt}</div>`:''}
                         ${char.scroll ? `<div class="arena-scroll-badge ${isScrollReady(char.scroll)?'ready':'spent'}">${scrollMasked?'📜 ?':(char.scroll.emoji+' ×'+(char.scroll.chargesRemaining ?? 0))}</div>` : ''}
                     `;
                     el.className = `arena-slot card-3d ${char.scroll ? 'scroll-active-glow' : ''} w-36 h-48 md:w-44 md:h-56 bg-slate-900/90 border-2 ${isLocked ? 'border-emerald-500 shadow-[0_0_25px_rgba(16,185,129,0.6)]' : `border-${colorClass}-500`} rounded-2xl flex items-center justify-center flex-col relative overflow-hidden transition-all duration-300 shadow-lg`;
@@ -36837,7 +36856,8 @@ function startBattlePhase() {
                     return false;
                 }
                 const card=state.card;el.classList.add('active');
-                el.innerHTML=`<span>ИГРОК ${player} · ${card.kind==='group'?'КОМАНДА':'СВЯЗЬ'}</span><strong>${card.title}</strong><small>${card.effectLabel} · зарядов <b class="lore-charge">${state.chargesRemaining}/${state.maxCharges}</b></small>`;return true;
+                const names=(card.members||[]).map(uid=>team.find(f=>f.uid===uid)?.name).filter(Boolean).join(' + ');
+                el.innerHTML=`<span>ИГРОК ${player} · ${card.kind==='group'?'КОМАНДА':'СВЯЗЬ'} · 1 ЖИЗНЬ</span><strong>${card.title}</strong><small>${names}</small><small>${card.effectLabel} · зарядов <b class="lore-charge">${state.chargesRemaining}/${state.maxCharges}</b></small>`;return true;
             };
             const a=render('lore-p1-active',arenaSlot1,p1Team,1),b=render('lore-p2-active',arenaSlot2,p2Team,2);
             const strip=document.getElementById('lore-duel-strip');if(strip)strip.classList.toggle('hidden',!(a||b));
@@ -38461,7 +38481,7 @@ globalThis.R34_TRAINING_SCENARIO = Object.freeze({
   function audit(){const minText=[...document.querySelectorAll('button,small,span,p')].filter(e=>e.offsetParent!==null).reduce((m,e)=>Math.min(m,parseFloat(getComputedStyle(e).fontSize)||999),999);return Object.freeze({version:VERSION,phase:document.body?.dataset.appPhase||'hub',viewport:[innerWidth,innerHeight],horizontalOverflow:document.documentElement.scrollWidth>innerWidth+1,minimumVisibleTextPx:Number.isFinite(minText)?minText:null,retiredRelationUi:false,alive:[activeCount(typeof p1Team!=='undefined'?p1Team:[]),activeCount(typeof p2Team!=='undefined'?p2Team:[])]});}
   let appSyncRaf=0;
   function scheduleSync(){if(!appSyncRaf)appSyncRaf=requestAnimationFrame(()=>{appSyncRaf=0;syncPhase();});}
-  function boot(){document.body.classList.add('app-ui');syncPhase();document.addEventListener('r27:phase-change',scheduleSync);document.addEventListener('r34:mode-change',scheduleSync);document.addEventListener('r73:layout',scheduleSync);document.addEventListener('r61:arena-selected',scheduleSync);document.addEventListener('click',e=>{if(e.target.closest('button,[data-r33-action]'))scheduleSync();},{passive:true});document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('r57-mode-modal')?.classList.contains('hidden'))closeModeSelect();});document.dispatchEvent(new CustomEvent('app:ready',{detail:audit()}));}
+  function boot(){document.body.classList.add('app-ui');syncPhase();document.addEventListener('r27:phase-change',scheduleSync);document.addEventListener('r34:mode-change',scheduleSync);document.addEventListener('r74:layout',scheduleSync);document.addEventListener('r61:arena-selected',scheduleSync);document.addEventListener('click',e=>{if(e.target.closest('button,[data-r33-action]'))scheduleSync();},{passive:true});document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('r57-mode-modal')?.classList.contains('hidden'))closeModeSelect();});document.dispatchEvent(new CustomEvent('app:ready',{detail:audit()}));}
   window.APP_UI=Object.freeze({version:VERSION,openModeSelect,closeModeSelect,showCpuDifficulties,startLocal,startCpu,requestMatchExit,cancelMatchExit,confirmMatchExit,updateScore,audit});
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
 })();
@@ -38555,7 +38575,7 @@ globalThis.R34_TRAINING_SCENARIO = Object.freeze({
   document.addEventListener('click',schedule,{passive:true});
   window.addEventListener('pagehide',()=>r67Observers.forEach(o=>o.disconnect()),{once:true});
   addEventListener('resize',schedule,{passive:true});addEventListener('orientationchange',schedule,{passive:true});window.visualViewport?.addEventListener('resize',schedule,{passive:true});
-  document.addEventListener('r27:ready',schedule);document.addEventListener('r28:ready',schedule);document.addEventListener('r27:phase-change',schedule);document.addEventListener('r34:mode-change',schedule);document.addEventListener('r73:layout',schedule);
+  document.addEventListener('r27:ready',schedule);document.addEventListener('r28:ready',schedule);document.addEventListener('r27:phase-change',schedule);document.addEventListener('r34:mode-change',schedule);document.addEventListener('r74:layout',schedule);
   window.R67_MOBILE_FINAL=Object.freeze({version:VERSION,audit,refresh:apply});
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',apply,{once:true});else apply();
 })();
