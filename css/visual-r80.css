@@ -1,0 +1,444 @@
+/* R80 initiative controls remain in flow, even before layout JS initializes. */
+body #initiative-phase, body.r75-layout #initiative-phase {clip-path:none!important;transform:none!important;animation:none!important;overflow:visible!important;}
+body #initiative-phase :is(#roll-init-btn,#start-draft-btn) {position:relative!important;inset:auto!important;transform:none!important;align-self:center!important;width:min(470px,100%)!important;margin:8px auto 0!important;min-height:50px!important;z-index:2;}
+#initiative-phase [aria-busy="true"] {opacity:.8;cursor:wait;}
+#init-result-text {min-height:1.5em;}
+
+/* R80 Visual DNA: ink, warm paper, restrained brass; cyan/vermillion teams.
+   Layout stays independent from ornament. All FX surfaces are non-interactive. */
+:root {
+  --r80-ink:#090f16; --r80-surface:#101b25; --r80-paper:#f2ead8;
+  --r80-muted:#a9b7be; --r80-brass:#dfb579; --r80-one:#81c9e5; --r80-two:#e59876;
+  --arena-primary:#79bfa3; --arena-accent:#e6ba77; --arena-rgb:121,191,163;
+  --motion-fast:120ms; --motion-ui:280ms; --motion-combat:180ms;
+  --ease-ui:cubic-bezier(.16,1,.3,1); --ease-impact:cubic-bezier(.5,0,.2,1);
+}
+body.r80-visual {background:#090f16!important;color:var(--r80-paper);font-family:Arial,Helvetica,sans-serif;isolation:isolate;}
+
+body.r80-visual #chakra-canvas {position:fixed!important;inset:0!important;width:100%;height:100%;z-index:2!important;pointer-events:none!important;opacity:.7;}
+.r80-world {position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;background:#090f16;contain:strict;}
+.r80-world-art {position:absolute;inset:-3%;background-image:var(--r80-world-art);background-size:cover;background-position:50% 48%;opacity:.18;transform:scale(1.035);transition:opacity .4s;}
+.r80-world::after {content:"";position:absolute;inset:0;background:linear-gradient(90deg,#070d16b8,#0a101969 55%,#0a1019ca),linear-gradient(0deg,#090f16 0%,transparent 50%,#090f16af);}
+.r80-world-mist {position:absolute;inset:0;background:radial-gradient(ellipse at 70% 35%,rgba(var(--arena-rgb),.13),transparent 55%);}
+.r80-world-grid {position:absolute;inset:0;background:linear-gradient(90deg,#c5d6c705 1px,transparent 1px),linear-gradient(#c5d6c705 1px,transparent 1px);background-size:72px 72px;}
+body[data-r80-phase="hub"] .r80-world-art {opacity:.32;}
+body[data-r80-phase="battle"] .r80-world-art,body[data-r80-phase="arena"] .r80-world-art {opacity:.39;}
+body.r80-visual #main-container {position:relative;z-index:3;}
+body.r80-visual .command-header {background:linear-gradient(180deg,#091019f5,#091019dc)!important;border-bottom:1px solid #e0bd7a28!important;backdrop-filter:none!important;}
+body.r80-visual .command-emblem {border-radius:50%!important;background:#cfa5610a!important;color:var(--r80-brass)!important;border-color:#d9af655a!important;}
+body.r80-visual .command-overline {color:var(--r80-brass)!important;}
+body.r80-visual .command-brand-copy h1 {color:var(--r80-paper)!important;letter-spacing:.04em;}
+body.r80-visual #game-status {font-size:12px!important;color:#aabbbf!important;font-family:Arial,Helvetica,sans-serif!important;letter-spacing:.02em!important;}
+body.r80-visual :is(.command-primary,.r57-play) {border:1px solid #f1d39c70!important;border-radius:6px!important;background:linear-gradient(105deg,#e4bf80,#bb8351)!important;color:#13181e!important;font-weight:900!important;letter-spacing:.075em!important;box-shadow:0 6px 18px #0004,inset 0 1px 0 #ffe8ad55!important;transition:filter var(--motion-fast),box-shadow var(--motion-fast)!important;overflow:hidden;}
+body.r80-visual :is(.command-primary,.r57-play):not(:disabled):hover {filter:brightness(1.12);box-shadow:0 8px 22px #0005,inset 0 1px 0 #ffe8ad70!important;}
+body.r80-visual :is(.command-primary,.r57-play):not(:disabled):active {filter:brightness(.93);}
+body.r80-visual .command-primary b {font-weight:400!important;border-left:1px solid #291d182e;padding-left:18px;}
+body.r80-visual button:focus-visible {outline:2px solid #f1dfba!important;outline-offset:4px!important;}
+body.r80-visual button:disabled {cursor:not-allowed;}
+body.r80-visual .command-primary-danger {background:linear-gradient(105deg,#c9836b,#975c56)!important;color:#fff3e5!important;border-color:#db9c8170!important;}
+body.r80-visual .phase-shell {border:1px solid #c6b08d30!important;border-radius:8px!important;background:linear-gradient(145deg,#14232be8,#0c131cee)!important;box-shadow:0 24px 60px #0004!important;}
+body.r80-visual .phase-heading h2 {color:var(--r80-paper)!important;font-size:clamp(23px,3.1vw,43px)!important;letter-spacing:-.035em!important;}
+body.r80-visual .phase-heading span {color:var(--r80-brass)!important;font-size:11px!important;letter-spacing:.22em!important;}
+body.r80-visual .phase-heading p {color:#b5c4c9!important;font-size:14px!important;line-height:1.5!important;}
+
+/* Boot activation: no artificial loading delay. Existing readiness removes this. */
+#app-boot {background:radial-gradient(ellipse at 50% 45%,#243b43,#090f17 66%)!important;}
+#app-boot .app-boot-card {border:0!important;background:transparent!important;box-shadow:none!important;overflow:visible!important;}
+#app-boot .app-boot-mark {position:relative;width:90px!important;height:90px!important;display:grid;place-items:center;border:1px solid #e5bd7980!important;border-radius:50%!important;color:#eed8aa!important;background:#dba7600a!important;box-shadow:0 0 55px #83b0b01a;}
+#app-boot .app-boot-mark::before,#app-boot .app-boot-mark::after {content:"";position:absolute;inset:-17px;border:1px dashed #deb47980;border-radius:50%;animation:r80-orbit 8s linear infinite;pointer-events:none;}
+#app-boot .app-boot-mark::after {inset:-31px;border-style:solid;border-color:transparent #81c9e580;animation-direction:reverse;animation-duration:3s;}
+#app-boot #app-boot-title {letter-spacing:.19em!important;color:#f2e5c8!important;}
+#app-boot[data-state="ready"] {opacity:0;transition:opacity .3s ease;pointer-events:none;}
+@keyframes r80-orbit {to{transform:rotate(360deg);}}
+
+/* Main menu: illustrated field-station instead of two generic dashboard panels. */
+body.r80-visual #command-hub {max-width:1320px!important;width:100%!important;margin:0 auto!important;padding:22px 14px 10px!important;background:none!important;}
+body.r80-visual .r57-hub-grid {display:grid!important;grid-template-columns:minmax(0,1.35fr) minmax(320px,.9fr)!important;gap:26px!important;align-items:stretch!important;}
+body.r80-visual .r57-hero-block {position:relative!important;min-width:0;min-height:548px!important;display:flex!important;flex-direction:column!important;justify-content:flex-end!important;padding:275px 28px 28px!important;border:1px solid #dac7a838!important;border-radius:9px!important;overflow:hidden!important;background:linear-gradient(0deg,#0b121dfc 6%,#0c172079 68%),url('../assets/arenas/hidden_forest.webp') center/cover!important;box-shadow:0 30px 50px #0003!important;}
+body.r80-visual .r57-hero-block::before {content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 65% 25%,#ebc08c19,transparent 55%),linear-gradient(100deg,#13263166,transparent);z-index:0;}
+body.r80-visual .r57-hero-block::after {content:"";position:absolute;inset:12px;border:1px solid #dcc59b28;pointer-events:none;border-radius:3px;}
+body.r80-visual .r57-hero-block>.r57-hero-sigil {position:absolute!important;left:27px;top:23px;width:40px!important;height:40px!important;font-size:21px!important;border-radius:50%!important;z-index:2;background:#0c1e27d9!important;border-color:#e0bd7a80!important;color:#e0bd7a!important;}
+.r80-hero-caption {position:absolute;left:82px;top:29px;z-index:2;font-size:10px;font-weight:700;letter-spacing:.19em;color:#dfd4bd;line-height:1.7;}
+.r80-hero-caption small {display:block;letter-spacing:.12em;color:#9fbbb9;font-size:9px;}
+#r80-hero-cards {position:absolute;left:12%;right:2%;top:42px;height:290px;pointer-events:none;z-index:1;--hero-x:0px;--hero-y:0px;transform:translate(var(--hero-x),var(--hero-y));transition:transform .5s var(--ease-ui);}
+.r80-hero-card {position:absolute;width:37%;height:215px;top:0;border:1px solid #d2af7370;background:#101b29;border-radius:9px;padding:5px;box-shadow:0 12px 22px #0008;overflow:hidden;}
+.r80-hero-card img {width:100%;height:100%;object-fit:cover;border-radius:4px;}
+.r80-hero-card::after {content:"";position:absolute;inset:5px;background:linear-gradient(0deg,#091221b8,transparent 60%);border-radius:4px;}
+.r80-hero-card i {position:absolute;bottom:16px;left:18px;z-index:1;font:700 11px/1.3 Arial,sans-serif;letter-spacing:.17em;color:#e5d4b2;font-style:normal;}
+.r80-hero-card:nth-child(1) {left:0;top:33px;transform:rotate(-14deg);border-color:#78b5c780;}
+.r80-hero-card:nth-child(2) {left:29%;top:1px;transform:rotate(-2deg);z-index:2;height:240px;border-color:#e4c18bc0;}
+.r80-hero-card:nth-child(3) {left:57%;top:36px;transform:rotate(13deg);border-color:#9a8bb6a0;}
+body.r80-visual .r57-hero-overline {position:relative;z-index:2;margin:8px 0 12px!important;color:#deb77b!important;font-size:10px!important;line-height:1.5;letter-spacing:.18em!important;}
+body.r80-visual .r57-hero-title {position:relative;z-index:2;font-family:Arial,Helvetica,sans-serif!important;font-size:clamp(43px,5.4vw,72px)!important;line-height:.94!important;letter-spacing:-.05em!important;font-weight:900!important;margin:0 0 17px!important;color:#f3ebd9!important;text-shadow:0 3px 15px #07101988;}
+body.r80-visual .r57-hero-title em {color:#dfb67a!important;font-style:normal!important;}
+body.r80-visual .r57-hero-lead {position:relative;z-index:2;font-size:14px!important;line-height:1.6!important;color:#b6c9ca!important;max-width:420px;margin:0 0 17px!important;}
+body.r80-visual .r57-feature-row {position:relative;z-index:2;display:flex;gap:10px!important;margin:0!important;}
+body.r80-visual .r57-feature-row>span {border:0!important;border-left:1px solid #d6b17150!important;border-radius:0!important;padding:0 13px!important;background:none!important;color:#a5b9c1!important;font-size:11px!important;}
+body.r80-visual .r57-feature-row b {color:#e8e1ce!important;font-size:16px!important;font-weight:800!important;margin-right:5px;}
+body.r80-visual .r57-command-center {background:linear-gradient(150deg,#14222cfa,#0c151fde)!important;border:1px solid #d0bd9630!important;border-top:2px solid #d6b477!important;border-radius:8px!important;padding:28px!important;box-shadow:0 24px 40px #0003;display:flex!important;flex-direction:column!important;justify-content:center!important;gap:18px!important;}
+body.r80-visual .r57-profile-row {padding-bottom:18px;border-bottom:1px solid #c8baa221;}
+body.r80-visual .r57-profile-row small {color:#d0af78!important;font-size:10px!important;letter-spacing:.18em;}
+body.r80-visual .r57-profile-row strong {font-size:23px!important;}
+body.r80-visual .r57-play {min-height:66px!important;position:relative;display:flex!important;align-items:center!important;justify-content:space-between!important;padding:0 24px!important;font-size:19px!important;}
+body.r80-visual .r57-play::after {content:"";position:absolute;inset:0;background:linear-gradient(110deg,transparent 20%,#ffefd63d 48%,transparent 70%);transform:translateX(-140%);pointer-events:none;}
+body.r80-visual .r57-play:hover::after {transform:translateX(140%);transition:transform .7s;}
+body.r80-visual .r57-menu-grid {gap:9px!important;}
+body.r80-visual .r57-menu-grid button {background:#15232e!important;border:1px solid #7085923b!important;border-radius:5px!important;min-height:87px!important;padding:13px!important;transition:background .15s,translate .15s!important;box-shadow:inset 0 1px 0 #ffffff04;}
+body.r80-visual .r57-menu-grid button:hover {background:#1c303b!important;translate:0 -2px;}
+body.r80-visual .r57-menu-grid button span {font-size:14px!important;color:#e7e2d4!important;}
+body.r80-visual .r57-menu-grid button small {font-size:11px!important;color:#92a8b3!important;}
+body.r80-visual #r21-first-run-banner {border:1px solid #d3b47735!important;border-radius:5px!important;clip-path:none!important;background:#d8bb7910!important;padding:12px!important;}
+body.r80-visual #r21-first-run-banner b {color:#d9bc87!important;}
+body.r80-visual .r57-loop-strip {margin:20px 0 0!important;font-size:11px!important;letter-spacing:.06em;opacity:.8;}
+
+/* Initiative: compact heading, generous dice, permanent in-flow action zone. */
+body.r80-visual #initiative-phase {max-width:1000px!important;margin:14px auto!important;padding:28px 26px 26px!important;min-height:0!important;gap:0!important;}
+body.r80-visual #initiative-phase .phase-heading {margin-bottom:24px!important;border-bottom:1px solid #b8c3ba26!important;padding-bottom:21px!important;width:100%!important;}
+body.r80-visual .initiative-duel {gap:28px!important;width:min(620px,100%)!important;margin:0 auto 8px!important;}
+body.r80-visual .initiative-console {border-radius:8px!important;position:relative;padding:18px!important;min-height:152px!important;flex:1;background:linear-gradient(135deg,#152b34d9,#122129)!important;border:1px solid #76b0c354!important;cursor:pointer;}
+body.r80-visual .initiative-console.player-two {border-color:#d0967a57!important;background:linear-gradient(135deg,#30282bd9,#192029)!important;}
+body.r80-visual .initiative-console::before {content:"";position:absolute;inset:7px;border:1px solid #d2c2a512;border-radius:4px;pointer-events:none;}
+body.r80-visual .initiative-label {font-size:12px!important;letter-spacing:.1em!important;}
+body.r80-visual #init-p1-val,body.r80-visual #init-p2-val {font-size:62px!important;line-height:1.3!important;text-shadow:0 6px 16px #0006;}
+body.r80-visual #init-result-text {min-height:24px!important;height:auto!important;font-size:15px!important;margin:12px 0!important;color:#e5c38e!important;}
+body.r80-visual #init-result-text[data-winner="1"] {color:#98d9ef!important;}
+body.r80-visual #init-result-text[data-winner="2"] {color:#eab192!important;}
+body.r80-visual .rolling-dice {animation:r80-dice .23s linear infinite!important;}
+@keyframes r80-dice {0%{transform:perspective(300px) rotateY(0deg) rotateZ(-10deg) scale(.92);}50%{transform:perspective(300px) rotateY(180deg) rotateZ(8deg) scale(1.09);}100%{transform:perspective(300px) rotateY(360deg) rotateZ(-10deg) scale(.92);}}
+
+/* Draft: consistent framing, readable data, quiet side rosters. */
+body.r80-visual .draft-stage-shell {border-color:#c1b49630!important;border-radius:8px!important;background:linear-gradient(135deg,#101e28eb,#0d151eee)!important;}
+body.r80-visual .draft-stage-header {border-bottom-color:#ddc28a25!important;}
+body.r80-visual .draft-stage-header :is(h2,h3) {color:#efe6d4!important;}
+body.r80-visual #draft-card {border:1px solid #d9b3748c!important;border-radius:7px!important;background:linear-gradient(150deg,#1f303b,#101c27)!important;box-shadow:0 16px 36px #0007,inset 0 1px 0 #edcf9f2a!important;isolation:isolate;overflow:hidden;}
+body.r80-visual #draft-card::after {content:"";position:absolute;inset:0;background:linear-gradient(120deg,transparent 32%,#e9dcbb12 45%,transparent 55%);pointer-events:none;z-index:4;}
+body.r80-visual .draft-portrait-frame {border-radius:3px!important;overflow:hidden!important;background:#0a1724!important;position:relative;}
+body.r80-visual .draft-portrait-frame::after {content:"";position:absolute;inset:0;background:linear-gradient(0deg,#101c27a1,transparent 35%);pointer-events:none;}
+body.r80-visual .draft-portrait-frame img {object-fit:contain!important;width:100%;height:100%;}
+body.r80-visual #draft-name {font-family:Arial,Helvetica,sans-serif!important;font-weight:800!important;letter-spacing:-.025em!important;font-size:clamp(18px,2vw,27px)!important;}
+body.r80-visual #draft-card[data-r80-tier="SSS"],body.r80-visual #draft-card[data-r80-tier="SS"] {border-color:#e4c48d!important;}
+body.r80-visual .draft-team-panel {border-radius:6px!important;border-color:#9aafb326!important;background:#0b151fcc!important;}
+body.r80-visual .draft-team-slot {border-radius:4px!important;border-color:#88a1b332!important;background:#172532!important;}
+body.r80-visual .draft-team-slot img {border-radius:3px!important;object-fit:cover;}
+body.r80-visual #draft-keep-btn {background:linear-gradient(100deg,#41666f,#214853)!important;border-color:#88c4ce80!important;color:#e8f3ec!important;}
+body.r80-visual #draft-pass-btn {background:linear-gradient(100deg,#644c42,#3b3334)!important;border-color:#c2937970!important;color:#f3e4d7!important;}
+.r80-tilting {transform:perspective(1100px) rotateX(var(--r80-tilt-x,0deg)) rotateY(var(--r80-tilt-y,0deg))!important;}
+.r80-card-ghost {position:fixed;z-index:120;pointer-events:none!important;overflow:hidden;border:1px solid #e8c78d;background:#142330;border-radius:5px;box-shadow:0 12px 24px #0005;}
+.r80-card-ghost img {width:100%;height:100%;object-fit:contain;}
+
+/* Scrolls: paper tickets, seals and clear equipped states. */
+body.r80-visual #scroll-phase {background:linear-gradient(145deg,#17262cd9,#101923ed)!important;}
+body.r80-visual #scroll-inventory>button {border-radius:5px!important;border-color:#ccb58a60!important;background:linear-gradient(140deg,#2b302f,#171f27)!important;box-shadow:inset 3px 0 0 #c4a87457!important;}
+body.r80-visual #scroll-inventory>button[aria-pressed="true"],body.r80-visual #scroll-inventory>button.selected {border-color:#e9c183!important;background:#3b3931!important;}
+body.r80-visual .r57-scroll-unit {border-radius:5px!important;background:#12212b!important;border-color:#97b5b333!important;}
+body.r80-visual .r57-scroll-fighter {border-radius:4px!important;border-color:#718b9850!important;background:#172935!important;}
+body.r80-visual .r57-scroll-fighter.scroll-active-glow {border-color:#dac188a0!important;box-shadow:inset 0 0 0 1px #dac18835!important;}
+body.r80-visual .r57-scroll-unit-head {background:#20323b!important;border-color:#adbbb02b!important;}
+
+/* Arena selection and battle material treatment. */
+body.r80-visual #arena-phase {max-width:1000px!important;padding-top:24px!important;}
+body.r80-visual .arena-roll-card {border:1px solid #d7bd8770!important;border-radius:6px!important;background:#12222d!important;overflow:hidden;}
+body.r80-visual .arena-roll-art {position:relative;}
+body.r80-visual .arena-roll-art::after {content:"";position:absolute;inset:0;background:linear-gradient(0deg,#12222dab,transparent 60%);pointer-events:none;}
+body.r80-visual .arena-roll-card.rolling .arena-roll-art img {animation:r80-reel .17s linear infinite!important;}
+@keyframes r80-reel {from{transform:translateX(12px) scale(1.04);opacity:.55;}to{transform:translateX(-8px) scale(1.04);opacity:.95;}}
+body.r80-visual #arena-roll-strip>span {border-radius:3px!important;font-size:10px!important;}
+body.r80-visual #arena-roll-strip>span.active {color:#e8d7b2!important;border-color:#d4b782!important;background:#c8a56825!important;}
+body.r80-visual .roster-console {background:#0e1b25e8!important;border:1px solid #849ba63d!important;border-radius:6px!important;box-shadow:0 14px 28px #0003;}
+body.r80-visual .roster-console-one {border-top-color:#81c9e5a0!important;}
+body.r80-visual .roster-console-two {border-top-color:#e59876a0!important;}
+body.r80-visual .combat-table {background:radial-gradient(ellipse at 50% 45%,rgba(var(--arena-rgb),.14),#0c1723c9 72%)!important;border:1px solid #9eb6b62c!important;border-radius:7px!important;}
+body.r80-visual .arena-slot {border-radius:6px!important;background:#101f2de3!important;overflow:hidden!important;box-shadow:0 8px 20px #0005!important;}
+body.r80-visual .arena-slot img {object-fit:contain!important;}
+body.r80-visual .combat-vs-mark {font-family:Georgia,serif!important;font-style:italic!important;color:#d4b27d!important;text-shadow:0 0 25px #efc08025!important;}
+body.r80-visual .lore-duel-card {background:#142431e8!important;border-radius:4px!important;}
+body.r80-visual .combat-summary {border:1px solid #d1b37740!important;border-left:3px solid #d8b379!important;border-radius:5px!important;background:#12212de8!important;}
+body.r80-visual #end-screen {background:radial-gradient(ellipse at 50% 15%,#d3b98216,#101b26ed 65%)!important;}
+body.r80-visual .r20-victory-seal {border-color:#e2bd75!important;color:#eed3a0!important;box-shadow:0 0 55px #dcc08516!important;}
+body.r80-visual #end-title {color:#eee1c5!important;}
+
+/* Battle presentation. Accessible game state remains in original DOM. */
+.r80-fx-canvas {position:fixed;inset:0;z-index:202;width:100%;height:100%;pointer-events:none!important;contain:strict;}
+.r80-transition {position:fixed;inset:0;z-index:160;pointer-events:none!important;opacity:0;background:linear-gradient(100deg,transparent 20%,#122832bf 46%,#e7c68b36 50%,#18333dab 53%,transparent 75%);}
+.r80-combat-cinematic {position:fixed;inset:0;z-index:200;pointer-events:none!important;display:none;align-items:center;justify-content:center;padding:16px;}
+.r80-combat-cinematic.active {display:flex;}
+.r80-combat-cinematic::before {content:"";position:absolute;inset:0;background:radial-gradient(ellipse at center,#070f1888,#050a1255);pointer-events:none;}
+.r80-duel-panel {position:relative;width:min(640px,calc(100vw - 28px));background:linear-gradient(115deg,#0d202bf2,#111b25f7 46%,#291f25f2);border:1px solid #ddc48b73;border-radius:9px;padding:18px 22px 16px;box-shadow:0 30px 80px #0008;overflow:hidden;}
+.r80-duel-panel::before {content:"";position:absolute;inset:7px;border:1px solid #e4c8941a;border-radius:4px;pointer-events:none;}
+.r80-duel-heading {display:flex;justify-content:space-between;gap:14px;font:700 10px/1.4 Arial,sans-serif;letter-spacing:.15em;color:#c2b395;margin-bottom:14px;}
+.r80-duel-stage {display:grid;grid-template-columns:minmax(0,1fr) 66px minmax(0,1fr);align-items:center;gap:12px;position:relative;}
+.r80-duel-fighter {min-width:0;text-align:center;}
+.r80-duel-art {height:228px;position:relative;overflow:hidden;background:#0a1724;border:1px solid #6faec191;border-radius:5px;box-shadow:0 9px 16px #0008;}
+.r80-duel-fighter.side-2 .r80-duel-art {border-color:#d793758c;}
+.r80-duel-art img {width:100%;height:100%;object-fit:contain;transition:filter .15s,opacity .15s;}
+.r80-duel-art::after {content:"";position:absolute;inset:0;background:linear-gradient(0deg,#0c192277,transparent 50%);}
+.r80-duel-side {display:block;font:700 9px/1.4 Arial,sans-serif;letter-spacing:.15em;color:#86c5da;margin-top:11px;}
+.r80-duel-fighter.side-2 .r80-duel-side {color:#e1a58a;}
+.r80-duel-name {display:block;font:800 16px/1.25 Arial,sans-serif;color:#e8e2d7;margin-top:3px;overflow-wrap:anywhere;}
+.r80-duel-vs {font:bold italic 33px/1 Georgia,serif;text-align:center;color:#e2ba7d;text-shadow:0 0 22px #ddb17935;}
+.r80-duel-fighter.winner .r80-duel-art {border-color:#ead59f;box-shadow:0 0 0 1px #ead59f55,0 0 20px #dcc28225;}
+.r80-duel-outcome {margin-top:17px;padding-top:13px;border-top:1px solid #cbb99035;text-align:center;opacity:0;transition:opacity .12s;}
+.r80-duel-outcome.revealed {opacity:1;}
+.r80-duel-outcome span {display:block;font:700 9px/1.3 Arial,sans-serif;letter-spacing:.18em;color:#acb8bc;}
+.r80-duel-outcome strong {display:block;font:900 23px/1.3 Arial,sans-serif;margin-top:3px;color:#eed4a2;}
+.r80-duel-outcome[data-team="1"] strong {color:#a2daed;}
+.r80-duel-outcome[data-team="2"] strong {color:#eab593;}
+.r80-duel-events {display:flex;flex-wrap:wrap;gap:5px;justify-content:center;margin-top:10px;}
+.r80-duel-events span {font:700 8px/1.4 Arial,sans-serif;letter-spacing:.09em;color:#b7c8c8;border:1px solid #a8bcb530;padding:4px 6px;border-radius:3px;}
+
+/* Touch adaptations: do not hide teams or next action to fit ornament. */
+@media(max-width:1100px) {
+ body.r80-visual .r57-hub-grid {gap:16px!important;grid-template-columns:minmax(0,1.1fr) minmax(280px,.9fr)!important;}
+ body.r80-visual .r57-hero-block {min-height:520px!important;padding:25px!important;}
+ #r80-hero-cards {height:255px;left:6%;top:62px;}
+ .r80-hero-card {height:210px;} .r80-hero-card:nth-child(2){height:233px;}
+ body.r80-visual .r57-command-center {padding:20px!important;}
+ body.r80-visual .r57-hero-title {font-size:52px!important;}
+}
+@media(max-width:700px) {
+ body.r80-visual #command-hub {padding:12px 8px 10px!important;}
+ body.r80-visual .r57-hub-grid {grid-template-columns:minmax(0,1fr)!important;gap:12px!important;}
+ body.r80-visual .r57-hero-block {min-height:322px!important;padding:22px!important;}
+ body.r80-visual .r57-hero-block>.r57-hero-sigil {top:18px;left:20px;width:31px!important;height:31px!important;font-size:17px!important;}
+ .r80-hero-caption {left:61px;top:20px;font-size:8px;}.r80-hero-caption small {font-size:8px;}
+ #r80-hero-cards {top:28px;left:44%;right:0;height:166px;opacity:.72;}
+ .r80-hero-card {height:131px;width:50%;}.r80-hero-card:nth-child(2){height:150px;left:21%;}.r80-hero-card:nth-child(3){left:47%;}
+ .r80-hero-card i {font-size:7px;left:9px;bottom:10px;}
+ body.r80-visual .r57-hero-overline {font-size:8px!important;max-width:170px;margin:75px 0 7px!important;}
+ body.r80-visual .r57-hero-title {font-size:43px!important;line-height:.96!important;margin-bottom:10px!important;}
+ body.r80-visual .r57-hero-lead {font-size:12px!important;line-height:1.4!important;margin:0 0 13px!important;max-width:310px;}
+ body.r80-visual .r57-feature-row>span {font-size:10px!important;padding:0 8px!important;}
+ body.r80-visual .r57-feature-row b {font-size:14px!important;}
+ body.r80-visual .r57-command-center {padding:16px!important;gap:12px!important;}
+ body.r80-visual .r57-profile-row {padding-bottom:9px;}
+ body.r80-visual .r57-profile-row strong {font-size:18px!important;}
+ body.r80-visual .r57-play {min-height:52px!important;font-size:17px!important;}
+ body.r80-visual .r57-menu-grid button {min-height:68px!important;padding:10px!important;}
+ body.r80-visual .r57-menu-grid button span {font-size:12px!important;}
+ body.r80-visual .r57-loop-strip {margin-top:13px!important;}
+ body.r80-visual #initiative-phase {margin:8px auto!important;padding:19px 14px!important;}
+ body.r80-visual #initiative-phase .phase-heading {padding-bottom:13px!important;margin-bottom:15px!important;}
+ body.r80-visual .phase-heading h2 {font-size:24px!important;line-height:1.1!important;}
+ body.r80-visual .phase-heading p {font-size:12px!important;line-height:1.35!important;}
+ body.r80-visual .initiative-duel {gap:10px!important;}
+ body.r80-visual .initiative-console {min-height:118px!important;padding:12px 8px!important;}
+ body.r80-visual .initiative-label {font-size:10px!important;}
+ body.r80-visual #init-p1-val,body.r80-visual #init-p2-val {font-size:48px!important;}
+ body.r80-visual #init-result-text {font-size:12px!important;min-height:18px!important;margin:9px 0!important;}
+ body.r80-visual #initiative-phase :is(#roll-init-btn,#start-draft-btn) {min-height:46px!important;font-size:13px!important;margin-top:4px!important;}
+ body.r80-visual #draft-name {font-size:19px!important;}
+ .r80-duel-panel {padding:14px 15px;}
+ .r80-duel-heading {font-size:8px;gap:8px;letter-spacing:.1em;}
+ .r80-duel-stage {grid-template-columns:minmax(0,1fr) 29px minmax(0,1fr);gap:8px;}
+ .r80-duel-art {height:178px;}
+ .r80-duel-name {font-size:12px;}.r80-duel-vs{font-size:24px;}
+ .r80-duel-outcome strong {font-size:19px;}
+ .r80-duel-outcome {margin-top:13px;}
+}
+@media(max-width:600px) and (max-height:700px) {
+ body.r80-visual .r57-hero-block {min-height:251px!important;padding:17px!important;}
+ body.r80-visual .r57-hero-block>.r57-hero-sigil,.r80-hero-caption {display:none!important;}
+ #r80-hero-cards {top:8px;left:48%;opacity:.56;}
+ body.r80-visual .r57-hero-overline {margin-top:24px!important;}
+ body.r80-visual .r57-hero-title {font-size:37px!important;}
+ body.r80-visual .r57-hero-lead {max-width:290px;font-size:11px!important;}
+ body.r80-visual .r57-command-center {gap:9px!important;padding:13px!important;}
+ body.r80-visual .r57-profile-row {padding-bottom:6px;}
+ body.r80-visual #initiative-phase {padding:14px 12px!important;}
+ body.r80-visual #initiative-phase .phase-heading {margin-bottom:10px!important;padding-bottom:10px!important;}
+ body.r80-visual .phase-heading h2 {font-size:21px!important;}
+ body.r80-visual .initiative-console {min-height:106px!important;}
+}
+@media(orientation:landscape) and (max-height:500px) {
+ body.r80-visual .r57-hub-grid {grid-template-columns:minmax(0,1fr) minmax(290px,.85fr)!important;}
+ body.r80-visual .r57-hero-block {min-height:320px!important;padding:20px!important;}
+ body.r80-visual .r57-hero-block>.r57-hero-sigil,.r80-hero-caption {display:none!important;}
+ #r80-hero-cards {left:42%;top:0;opacity:.5;}
+ body.r80-visual .r57-hero-overline {margin:15px 0 10px!important;}
+ body.r80-visual .r57-hero-title {font-size:41px!important;}
+ body.r80-visual .r57-hero-lead {font-size:12px!important;max-width:330px;}
+ body.r80-visual .r57-command-center {gap:8px!important;padding:15px!important;}
+ body.r80-visual .r57-play {min-height:46px!important;}
+ body.r80-visual #initiative-phase {padding:12px 18px!important;margin:5px auto!important;display:grid!important;grid-template-columns:minmax(0,1fr) 260px;column-gap:22px!important;align-items:center!important;}
+ body.r80-visual #initiative-phase.hidden {display:none!important;}
+ body.r80-visual #initiative-phase .phase-heading {grid-column:1;grid-row:1 / span 2;margin:0!important;padding:5px 0!important;border:0!important;}
+ body.r80-visual #initiative-phase .phase-heading h2 {font-size:27px!important;}
+ body.r80-visual .initiative-duel {grid-column:2;gap:10px!important;grid-row:1;margin:0!important;}
+ body.r80-visual .initiative-console {min-height:95px!important;padding:8px!important;}
+ body.r80-visual #init-p1-val,body.r80-visual #init-p2-val {font-size:38px!important;}
+ body.r80-visual #init-result-text {grid-column:2;grid-row:2;margin:7px 0!important;font-size:12px!important;min-height:18px!important;}
+ body.r80-visual #initiative-phase :is(#roll-init-btn,#start-draft-btn) {grid-column:1 / -1;grid-row:3;margin:6px auto 0!important;min-height:44px!important;}
+ .r80-duel-panel {width:560px;padding:8px 18px;max-height:calc(100vh - 12px);}
+ .r80-duel-stage {grid-template-columns:1fr 70px 1fr;}
+ .r80-duel-art {height:124px;}.r80-duel-heading{margin-bottom:5px;}
+ .r80-duel-name {font-size:12px;}.r80-duel-side{margin-top:4px;}
+ .r80-duel-condition{margin-top:3px;}
+ .r80-duel-outcome{margin-top:6px;padding-top:5px;}.r80-duel-outcome strong{font-size:17px;}
+ .r80-duel-events{margin-top:5px;}
+ .r80-duel-skip{margin-top:6px;min-height:32px;padding:7px 12px;}
+}
+/* Respect both OS and in-game quality controls; critical information stays visible. */
+body[data-r80-quality="performance"] .r80-world-mist {display:none;}
+body[data-r80-motion="reduced"] :is(.rolling-dice,.arena-roll-card.rolling img,#app-boot .app-boot-mark::before,#app-boot .app-boot-mark::after) {animation:none!important;}
+body[data-r80-motion="reduced"] .r80-tilting {transform:none!important;}
+body[data-r80-motion="reduced"] * {scroll-behavior:auto!important;}
+body[data-r21-contrast="high"] .phase-shell,body[data-r21-contrast="high"] .r57-command-center {background:#0b1520!important;}
+@media(prefers-reduced-motion:reduce) {
+ #app-boot .app-boot-mark::before,#app-boot .app-boot-mark::after,.r80-visual .rolling-dice,.r80-visual .arena-roll-card.rolling img {animation:none!important;}
+ .r80-hero-card,.r80-world-art,#r80-hero-cards {transition:none!important;}
+}
+
+body.r80-visual .r57-command-center > * {margin:0!important;}
+body.r80-visual .r57-hero-block > :is(.r57-hero-overline,.r57-hero-title,.r57-hero-lead,.r57-feature-row) {flex-shrink:0;}
+/* Slice review: full framing and wider type hierarchy without cropping portraits. */
+body.r80-visual .r57-hero-block::before,body.r80-visual .r57-hero-block::after {width:auto!important;height:auto!important;transform:none!important;}
+body.r80-visual .draft-team-panel-head {display:flex!important;flex-direction:column!important;align-items:flex-start!important;gap:5px!important;}
+body.r80-visual .draft-team-panel-head>span {font-size:12px!important;letter-spacing:.06em!important;}
+body.r80-visual .draft-team-panel-head>strong {font:700 10px/1.3 Arial,sans-serif!important;letter-spacing:.015em!important;border:0!important;background:none!important;padding:0!important;color:#93a9b8!important;}
+@media(min-width:951px) and (min-height:650px) {
+ body.r80-visual.r75-layout[data-r75-phase="draft"] #draft-img-container {height:clamp(205px,32dvh,290px)!important;max-height:none!important;}
+ body.r80-visual.r75-layout[data-r75-phase="draft"] .draft-team-slots {gap:8px!important;}
+ body.r80-visual.r75-layout[data-r75-phase="draft"] .draft-team-slot {height:67px!important;max-height:none!important;}
+}
+/* A non-actionable fight button is not a translucent overlay on the round summary. */
+body.r80-visual #fight-btn.pointer-events-none {visibility:hidden!important;}
+@media(min-width:951px) {
+ body.r80-visual.r75-layout #battle-phase {max-width:1320px!important;}
+ body.r80-visual.r75-layout .roster-console {display:flex!important;flex-direction:column!important;max-height:max(285px,calc(100dvh - 330px))!important;}
+ body.r80-visual.r75-layout .roster-console :is(#p1-roster,#p2-roster) {flex:1 1 auto!important;min-height:0!important;overflow-y:auto!important;max-height:none!important;}
+ body.r80-visual.r75-layout .combat-table .arena-slot {height:clamp(160px,29dvh,240px)!important;}
+ body.r80-visual .combat-summary {position:relative!important;z-index:1!important;margin-top:12px!important;}
+}
+/* Compact phones: preserve a visible choice instead of spending the viewport on empty slots. */
+body.r80-visual.r75-layout #command-hub .r57-feature-row {display:flex!important;flex-wrap:wrap!important;align-items:center!important;min-height:0!important;height:auto!important;gap:10px!important;}
+body.r80-visual.r75-layout #command-hub .r57-feature-row>span {min-height:0!important;display:block!important;flex:1 1 60px!important;}
+@media(max-width:600px) and (max-height:700px) and (orientation:portrait) {
+ body.r80-visual.r75-layout #draft-phase .draft-stage-header {padding:5px!important;gap:5px!important;grid-template-columns:minmax(95px,.85fr) minmax(0,1.15fr)!important;}
+ body.r80-visual.r75-layout #draft-phase .draft-turn-title {font-size:13px!important;line-height:1.1!important;margin:2px 0 0!important;}
+ body.r80-visual.r75-layout #draft-phase .draft-current-player-badge {font-size:10px!important;padding:2px 5px!important;line-height:1.1!important;}
+ body.r80-visual.r75-layout #draft-phase .draft-progress-box {font-size:11px!important;line-height:1.25!important;gap:2px!important;padding:3px!important;}
+ body.r80-visual.r75-layout #draft-phase .draft-progress-box :is(span,strong) {font-size:11px!important;line-height:1.25!important;}
+ body.r80-visual.r75-layout.r67-mobile[data-r75-phase="draft"] #draft-phase .draft-team-panel {height:125px!important;}
+ body.r80-visual.r75-layout.r67-mobile[data-r75-phase="draft"] #draft-phase .draft-team-slot.empty {height:26px!important;min-height:26px!important;}
+ body.r80-visual.r75-layout #draft-phase .draft-team-panel-head {gap:1px!important;margin-bottom:3px!important;}
+ body.r80-visual.r75-layout #draft-img-container {height:104px!important;min-height:104px!important;}
+ body.r80-visual.r75-layout #draft-name {font-size:17px!important;line-height:1.08!important;}
+ body.r80-visual.r75-layout #draft-phase .draft-affiliation-row,body.r80-visual.r75-layout #draft-phase .draft-odds-compact {font-size:11px!important;min-height:24px!important;padding:3px 5px!important;}
+ body.r80-visual.r75-layout #draft-phase .draft-affiliation-row :is(span,strong),body.r80-visual.r75-layout #draft-phase .draft-odds-compact :is(span,strong) {font-size:11px!important;line-height:1.2!important;}
+ body.r80-visual.r75-layout #draft-composition-hints {max-height:38px!important;overflow-y:auto!important;}
+}
+/* Lore remains visible in two columns rather than two tall blocks above the active roster. */
+@media(max-width:600px) and (orientation:portrait) {
+ body.r80-visual.r75-layout #battle-phase #lore-duel-strip {display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;gap:5px!important;}
+ body.r80-visual.r75-layout #battle-phase .lore-duel-mark {display:none!important;}
+ body.r80-visual.r75-layout #battle-phase .lore-duel-card {min-width:0!important;padding:6px!important;}
+ body.r80-visual.r75-layout #battle-phase .lore-duel-card :is(span,small) {font-size:11px!important;line-height:1.2!important;}
+ body.r80-visual.r75-layout #battle-phase .lore-duel-card strong {font-size:12px!important;line-height:1.25!important;}
+ body.r80-visual.r75-layout #battle-phase .lore-duel-card p {font-size:11px!important;line-height:1.25!important;margin-top:3px!important;}
+ body.r80-visual.r75-layout #battle-phase .r57-roster-card.composite .r75-roster-person {flex:1 1 98px!important;word-break:normal!important;}
+}
+
+.r80-draft-details {display:contents;}
+@media(max-width:600px) and (max-height:700px) and (orientation:portrait) {
+ body.r80-visual.r75-layout.r67-mobile[data-r75-phase="draft"] #draft-phase #draft-card {display:flex!important;flex-direction:column!important;max-height:calc(100dvh - 282px)!important;overflow:hidden!important;}
+ body.r80-visual.r75-layout.r67-mobile[data-r75-phase="draft"] #draft-phase #draft-card>:not(.r80-draft-details) {flex-shrink:0!important;}
+ body.r80-visual.r75-layout.r67-mobile[data-r75-phase="draft"] #draft-phase .r80-draft-details {display:block!important;flex:1 1 auto!important;min-height:24px!important;overflow-y:auto!important;overflow-x:hidden!important;overscroll-behavior:contain;scrollbar-width:thin;}
+ body.r80-visual.r75-layout.r67-mobile[data-r75-phase="draft"] #draft-phase .draft-actions {margin-top:4px!important;}
+}
+
+.r80-dash-echo {position:fixed;z-index:201;pointer-events:none!important;overflow:hidden;border:1px solid #b9e5ef;border-radius:5px;opacity:0;mix-blend-mode:screen;}
+.r80-dash-echo img {width:100%;height:100%;object-fit:contain;}
+.r80-impact-flash {position:absolute;inset:15% 8%;pointer-events:none;background:radial-gradient(ellipse,#f4dfaa99,transparent 65%);opacity:0;}
+
+@media(max-width:600px) and (max-height:700px) and (orientation:portrait) {
+ body.r80-visual.r75-layout.r67-mobile[data-r75-phase="battle"] #battle-phase .combat-table :is(#arena-p1,#arena-p2) {height:115px!important;min-height:115px!important;}
+ body.r80-visual.r75-layout.r67-mobile[data-r75-phase="battle"] #battle-phase .lore-duel-card {max-height:100px!important;overflow-y:auto!important;scrollbar-width:thin;}
+}
+body[data-r80-motion="reduced"] #app-boot .app-boot-mark::before,body[data-r80-motion="reduced"] #app-boot .app-boot-mark::after {animation:none!important;}
+
+/* The full-screen artwork stays stable. Depth comes from the layered scene,
+   pointer-driven hero parallax and lightweight ambient particles. */
+
+body.r80-visual #draft-card[data-r80-tier="SSS"] {box-shadow:0 14px 32px #0007,inset 0 0 0 1px #e8c68670!important;}
+body.r80-visual #draft-card[data-r80-tier="S"] {border-color:#ad9ac580!important;}
+/* The first-action instruction is essential content, including compact/mobile layouts. */
+body.r80-visual.r75-layout #initiative-phase .phase-heading>p {display:block!important;visibility:visible!important;opacity:1!important;height:auto!important;max-height:none!important;margin:10px 0 0!important;}
+
+/* Short phones: a horizontal chooser leaves a complete first action visible.
+   Composite context follows its selectable leader; no names or rules are removed. */
+@media(max-width:600px) and (max-height:700px) and (orientation:portrait) {
+ body.r80-visual.r75-layout.r67-mobile[data-r75-phase="battle"] #battle-phase .roster-console :is(#p1-roster,#p2-roster) {grid-template-columns:minmax(0,1fr)!important;}
+ body.r80-visual.r75-layout.r67-mobile[data-r75-phase="battle"] #battle-phase .r57-roster-card {display:flex!important;flex-direction:column!important;}
+ body.r80-visual.r75-layout.r67-mobile[data-r75-phase="battle"] #battle-phase .r57-roster-members {order:-1!important;}
+ body.r80-visual.r75-layout.r67-mobile[data-r75-phase="battle"] #battle-phase .r57-roster-member {display:grid!important;grid-template-columns:48px minmax(0,1fr)!important;gap:8px!important;min-height:60px!important;padding:4px!important;text-align:left!important;}
+ body.r80-visual.r75-layout.r67-mobile[data-r75-phase="battle"] #battle-phase .r57-roster-portrait {width:46px!important;height:52px!important;}
+ body.r80-visual.r75-layout.r67-mobile[data-r75-phase="battle"] #battle-phase .r57-roster-member-copy {display:flex!important;flex-direction:column!important;align-items:flex-start!important;text-align:left!important;min-width:0!important;}
+ body.r80-visual.r75-layout.r67-mobile[data-r75-phase="battle"] #battle-phase .r57-roster-member-copy strong {font-size:12px!important;line-height:1.18!important;}
+ body.r80-visual.r75-layout.r67-mobile[data-r75-phase="battle"] #battle-phase .r57-roster-member-copy small {font-size:10px!important;line-height:1.2!important;}
+}
+
+/* R80 Combat Polish, deterministic damage variants and result hold. */
+.r80-impact-flash.heavy {background:radial-gradient(ellipse,#fff1c7cc 0,#e2b3797a 26%,transparent 68%);filter:contrast(1.08);}
+.r80-duel-panel[data-r80-heavy="true"] {border-color:#e5b27b99;box-shadow:0 30px 88px #000a,0 0 0 1px #d99d6840,0 0 36px #a54d3e24;}
+.r80-duel-panel[data-r80-impact="lightning"],.r80-duel-panel[data-r80-impact="dash"] {background:linear-gradient(115deg,#0b2230f5,#111b25f7 46%,#252331f3);}
+.r80-duel-panel[data-r80-impact="seal"],.r80-duel-panel[data-r80-impact="rewrite"] {background:linear-gradient(115deg,#171a2cf5,#111b25f7 46%,#271b31f3);}
+.r80-heavy-badge {color:#f3b3a2!important;border-color:#c55b4f66!important;background:#4a191d7a!important;}
+.r80-duel-skip {display:block;margin:12px auto 0;min-width:124px;min-height:34px;border:1px solid #cfb77a42;border-radius:5px;background:#101b25d9;color:#d7c8a8;font:800 9px/1 Arial,sans-serif;letter-spacing:.13em;padding:9px 14px;pointer-events:auto!important;cursor:pointer;opacity:.38;transition:opacity .16s,border-color .16s,background .16s,transform .16s;}
+.r80-duel-skip.ready {opacity:.9;border-color:#d7bc7970;}
+.r80-duel-skip.ready:hover,.r80-duel-skip.ready:focus-visible {background:#1b2b36;border-color:#ead297;transform:translateY(-1px);outline:none;}
+.r80-duel-skip:disabled {cursor:default;}
+.r80-damage-fragment {position:fixed;z-index:204;width:9px;height:13px;pointer-events:none!important;opacity:0;background:linear-gradient(135deg,#efe2cfcc,#8f5661b8);border:1px solid currentColor;clip-path:polygon(15% 0,100% 19%,82% 100%,0 72%);box-shadow:0 2px 5px #0008;}
+
+/* Damage is a presentation overlay only. Portrait bytes remain untouched. */
+.r80-damage-layer {position:absolute;inset:0;z-index:7;pointer-events:none!important;opacity:0;overflow:hidden;border-radius:inherit;transition:opacity .18s ease,filter .18s ease;}
+.r80-damage-layer::before,.r80-damage-layer::after {content:"";position:absolute;inset:-12%;pointer-events:none;opacity:0;transform-origin:center;}
+[data-r80-state="1"] > .r80-damage-layer,[data-r80-state="1"] .r80-damage-layer {opacity:.62;background:linear-gradient(0deg,#3b17200f,transparent 45%);}
+[data-r80-state="1"] > .r80-damage-layer::before,[data-r80-state="1"] .r80-damage-layer::before {opacity:.88;background:linear-gradient(132deg,transparent 0 25%,#eef7ff00 25.25%,#e9eef0d9 25.7% 26.15%,transparent 26.55% 100%);clip-path:polygon(58% 0,100% 0,100% 50%,81% 39%,75% 18%);}
+[data-r80-state="1"] > .r80-damage-layer::after,[data-r80-state="1"] .r80-damage-layer::after {opacity:.52;background:linear-gradient(49deg,transparent 0 63%,#f2e8d2d4 63.35% 63.82%,transparent 64.2%);clip-path:polygon(0 58%,46% 60%,58% 100%,0 100%);}
+[data-r80-state="2"] > .r80-damage-layer,[data-r80-state="2"] .r80-damage-layer {opacity:.84;background:linear-gradient(22deg,transparent 0 43%,#fff0 43.2%,#d8e7e7b8 43.7% 44.1%,transparent 44.5%),linear-gradient(145deg,transparent 0 57%,#f1ead9b8 57.4% 57.9%,transparent 58.4%),radial-gradient(circle at 14% 84%,#7c31402e,transparent 25%);}
+[data-r80-state="2"] > .r80-damage-layer::before,[data-r80-state="2"] .r80-damage-layer::before {opacity:.94;background:linear-gradient(118deg,transparent 0 25%,#edf3f3d8 25.3% 25.9%,transparent 26.3% 100%),linear-gradient(54deg,transparent 0 70%,#dce9efbd 70.3% 70.8%,transparent 71.2%);clip-path:polygon(42% 0,100% 0,100% 72%,82% 62%,70% 35%,58% 50%);}
+[data-r80-state="2"] > .r80-damage-layer::after,[data-r80-state="2"] .r80-damage-layer::after {opacity:.76;background:linear-gradient(0deg,#641e2d4f,transparent 34%),radial-gradient(circle at 14% 84%,#d6c4a34a,transparent 24%);}
+[data-r80-state="3"] > .r80-damage-layer,[data-r80-state="3"] .r80-damage-layer {opacity:1;background:linear-gradient(32deg,transparent 0 21%,#edf1efdc 21.4% 21.9%,transparent 22.3% 45%,#f0e7d5cc 45.4% 45.9%,transparent 46.3%),linear-gradient(138deg,transparent 0 34%,#edf4f4dc 34.3% 34.9%,transparent 35.3% 69%,#dfc9bece 69.3% 70%,transparent 70.4%),linear-gradient(0deg,#260d16a8 0,transparent 28%);filter:drop-shadow(0 0 4px #892f3d80);}
+[data-r80-state="3"] > .r80-damage-layer::before,[data-r80-state="3"] .r80-damage-layer::before {opacity:1;background:linear-gradient(113deg,transparent 0 48%,#f6efe1ef 48.2% 48.8%,transparent 49.1%);clip-path:polygon(53% 0,100% 0,100% 100%,84% 100%,88% 82%,77% 72%,82% 57%,68% 44%,74% 28%,61% 17%);}
+[data-r80-state="3"] > .r80-damage-layer::after,[data-r80-state="3"] .r80-damage-layer::after {opacity:1;background:#0c1019df;clip-path:polygon(0 0,18% 0,12% 8%,19% 15%,10% 23%,16% 34%,8% 44%,14% 55%,6% 67%,12% 78%,4% 89%,9% 100%,0 100%);}
+[data-r80-state="4"] > .r80-damage-layer,[data-r80-state="4"] .r80-damage-layer {opacity:1;background:linear-gradient(36deg,transparent 0 19%,#f0e9dce2 19.3% 20%,transparent 20.4% 42%,#efe6d9d8 42.4% 43.1%,transparent 43.5%),linear-gradient(143deg,transparent 0 28%,#edf2f0e0 28.4% 29.1%,transparent 29.5% 63%,#d9bfc2df 63.4% 64.1%,transparent 64.5%),radial-gradient(circle at 52% 52%,#621d2d57,transparent 44%);filter:drop-shadow(0 0 6px #7d1f328f);}
+[data-r80-state="4"] > .r80-damage-layer::before,[data-r80-state="4"] .r80-damage-layer::before {opacity:1;background:linear-gradient(105deg,transparent 0 48%,#fff7e8ef 48.2% 49%,transparent 49.3%);clip-path:polygon(0 0,100% 0,96% 12%,100% 23%,92% 35%,100% 50%,91% 62%,100% 75%,88% 88%,94% 100%,0 100%,7% 89%,0 78%,8% 65%,0 51%,9% 37%,0 24%,8% 11%);}
+[data-r80-state="4"] > .r80-damage-layer::after,[data-r80-state="4"] .r80-damage-layer::after {opacity:1;background:#070b12ed;clip-path:polygon(0 0,24% 0,16% 8%,24% 16%,12% 25%,20% 35%,9% 46%,17% 58%,7% 69%,14% 80%,5% 91%,11% 100%,0 100%,0 0);}
+/* Four deterministic crack layouts; fighter UID selects one and it stays stable between renders. */
+[data-r80-damage-variant="1"] > .r80-damage-layer::before,[data-r80-damage-variant="1"] .r80-damage-layer::before {transform:rotate(5deg) scale(1.05);}
+[data-r80-damage-variant="1"] > .r80-damage-layer::after,[data-r80-damage-variant="1"] .r80-damage-layer::after {transform:scaleX(-1) rotate(-2deg);}
+[data-r80-damage-variant="2"] > .r80-damage-layer::before,[data-r80-damage-variant="2"] .r80-damage-layer::before {transform:rotate(-7deg) scale(1.08);}
+[data-r80-damage-variant="2"] > .r80-damage-layer::after,[data-r80-damage-variant="2"] .r80-damage-layer::after {transform:scaleY(-1) rotate(4deg);}
+[data-r80-damage-variant="3"] > .r80-damage-layer::before,[data-r80-damage-variant="3"] .r80-damage-layer::before {transform:scaleX(-1) rotate(8deg) scale(1.04);}
+[data-r80-damage-variant="3"] > .r80-damage-layer::after,[data-r80-damage-variant="3"] .r80-damage-layer::after {transform:scale(-1,-1) rotate(-5deg);}
+
+.r57-roster-portrait,.arena-slot,.r80-duel-art {position:relative;}
+.r57-roster-member[data-r80-state="1"] .char-img,.arena-slot[data-r80-state="1"] .arena-card-art {filter:saturate(.94) contrast(1.03);}
+.r57-roster-member[data-r80-state="2"] .char-img,.arena-slot[data-r80-state="2"] .arena-card-art {filter:saturate(.78) brightness(.9) contrast(1.06);}
+.r57-roster-member[data-r80-state="3"] .char-img,.arena-slot[data-r80-state="3"] .arena-card-art {filter:saturate(.55) brightness(.76) contrast(1.1);}
+.r57-roster-member[data-r80-state="4"] .char-img,.arena-slot[data-r80-state="4"] .arena-card-art {filter:grayscale(.84) brightness(.54) contrast(1.08);}
+.r57-roster-card[data-r80-state="3"] {border-color:#a64b5d80!important;box-shadow:inset 0 0 0 1px #7a26374a!important;}
+.r57-roster-card[data-r80-state="4"] {opacity:.72;}
+
+.r80-duel-condition {display:inline-block;margin-top:6px;padding:3px 7px;border:1px solid #8ba0a437;border-radius:999px;font:800 8px/1.2 Arial,sans-serif;letter-spacing:.08em;color:#b9c5c3;background:#09131cac;}
+.r80-duel-condition[data-r80-state="1"] {color:#e3bc9b;border-color:#c9855a60;}
+.r80-duel-condition[data-r80-state="2"] {color:#dfa18f;border-color:#a958526e;}
+.r80-duel-condition[data-r80-state="3"],.r80-duel-condition[data-r80-state="4"] {color:#f0a0aa;border-color:#b7475d80;background:#2b1119c9;}
+.r80-duel-outcome small {display:block;margin-top:5px;font:700 10px/1.35 Arial,sans-serif;letter-spacing:.035em;color:#c0b6ab;}
+.r80-duel-fighter.damage-hit .r80-damage-layer {animation:r80-damage-hit .38s cubic-bezier(.16,1,.3,1) both;}
+@keyframes r80-damage-hit {0%{opacity:0;transform:scale(.84)}38%{opacity:1;transform:scale(1.055)}100%{transform:scale(1)}}
+.r80-duel-fighter.loser .r80-duel-art img {filter:grayscale(.42) brightness(.74) saturate(.72);opacity:.72;}
+.r80-duel-fighter[data-r80-state="3"].loser .r80-duel-art img,.r80-duel-fighter[data-r80-state="4"].loser .r80-duel-art img {filter:grayscale(.72) brightness(.58) saturate(.55);opacity:.66;}
+.r80-duel-outcome.revealed {animation:r80-result-settle .24s cubic-bezier(.16,1,.3,1) both;}
+@keyframes r80-result-settle {from{opacity:0;transform:translateY(7px) scale(.985)}to{opacity:1;transform:none}}
+
+@media(max-width:700px){
+ .r80-duel-condition {font-size:7px;margin-top:4px;padding:2px 5px;}
+ .r80-duel-outcome small {font-size:9px;}
+ .r80-duel-skip {margin-top:9px;min-height:32px;padding:8px 12px;}
+}
+@media(prefers-reduced-motion:reduce){
+ .r80-duel-fighter.damage-hit .r80-damage-layer,.r80-duel-outcome.revealed {animation:none!important;}
+ .r80-damage-fragment {display:none!important;}
+}
+.arena-slot > .r80-damage-layer {inset:0 0 23% 0;z-index:3;border-radius:5px 5px 0 0;}
