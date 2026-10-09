@@ -1,0 +1,119 @@
+/* R77: both draft teams remain visible; battle roster follows the current turn. */
+@media (max-width: 600px) and (orientation: portrait) {
+  body.r75-layout.r67-mobile[data-r75-phase="draft"] #draft-phase .draft-board-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    grid-template-areas: "p1 p2" "card card" !important;
+    align-items: start !important;
+    gap: 6px !important;
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+  body.r75-layout.r67-mobile[data-r75-phase="draft"] #draft-phase .draft-team-panel.team-one {
+    grid-area: p1 !important;
+    grid-column: 1 !important;
+    grid-row: 1 !important;
+    order: 0 !important;
+  }
+  body.r75-layout.r67-mobile[data-r75-phase="draft"] #draft-phase .draft-team-panel.team-two {
+    grid-area: p2 !important;
+    grid-column: 2 !important;
+    grid-row: 1 !important;
+    order: 0 !important;
+  }
+  body.r75-layout.r67-mobile[data-r75-phase="draft"] #draft-phase .draft-card-v2 {
+    grid-area: card !important;
+    grid-column: 1 / -1 !important;
+    grid-row: 2 !important;
+    order: 0 !important;
+  }
+  body.r75-layout.r67-mobile[data-r75-phase="draft"] #draft-phase .draft-team-panel {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    height: clamp(160px, 23dvh, 198px) !important;
+    min-height: 0 !important;
+    min-width: 0 !important;
+    overflow: hidden !important;
+  }
+  body.r75-layout.r67-mobile[data-r75-phase="draft"] #draft-phase .draft-team-panel-head {
+    display: flex !important;
+    flex: 0 0 auto !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 2px !important;
+    margin-bottom: 4px !important;
+    line-height: 1.12 !important;
+    letter-spacing: 0 !important;
+  }
+  body.r75-layout.r67-mobile[data-r75-phase="draft"] #draft-phase .draft-team-panel-head span {
+    font-size: 12px !important;
+  }
+  body.r75-layout.r67-mobile[data-r75-phase="draft"] #draft-phase .draft-team-panel-head strong {
+    max-width: 100% !important;
+    padding: 1px 4px !important;
+    font-size: 11px !important;
+    line-height: 1.12 !important;
+    white-space: normal !important;
+    overflow-wrap: anywhere !important;
+  }
+  body.r75-layout.r67-mobile[data-r75-phase="draft"] #draft-phase .draft-team-slots {
+    display: grid !important;
+    flex: 1 1 auto !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    grid-auto-rows: min-content !important;
+    align-content: start !important;
+    gap: 3px !important;
+    width: 100% !important;
+    min-height: 0 !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+    touch-action: pan-y;
+  }
+  body.r75-layout.r67-mobile[data-r75-phase="draft"] #draft-phase .draft-team-slot {
+    height: 43px !important;
+    min-height: 43px !important;
+    padding: 2px !important;
+    overflow: hidden !important;
+  }
+  body.r75-layout.r67-mobile[data-r75-phase="draft"] #draft-phase .draft-team-slot.r57-composite-draft {
+    grid-column: 1 / -1 !important;
+    grid-template-columns: 57px minmax(0, 1fr) !important;
+    height: auto !important;
+    min-height: 76px !important;
+    max-height: none !important;
+    gap: 4px !important;
+    padding: 3px !important;
+    overflow: visible !important;
+  }
+  body.r75-layout.r67-mobile[data-r75-phase="draft"] #draft-phase .r57-composite-portraits {
+    width: 55px !important;
+    height: 58px !important;
+    min-height: 58px !important;
+  }
+  body.r75-layout.r67-mobile[data-r75-phase="draft"] #draft-phase .draft-team-slot.r57-composite-draft .r57-composite-portraits img {
+    height: 56px !important;
+  }
+  body.r75-layout.r67-mobile[data-r75-phase="draft"] #draft-phase .draft-team-slot.r57-composite-draft .r57-composite-portraits:is(.count-3,.count-4) img {
+    height: 27px !important;
+  }
+  body.r75-layout.r67-mobile[data-r75-phase="draft"] #draft-phase .r57-composite-copy strong {
+    font-size: 11px !important;
+    line-height: 1.12 !important;
+  }
+  body.r75-layout.r67-mobile[data-r75-phase="draft"] #draft-phase .r75-composite-names {
+    font-size: 10px !important;
+    line-height: 1.12 !important;
+  }
+  body.r75-layout.r67-mobile[data-r75-phase="draft"] #draft-phase .r57-composite-copy small {
+    display: none !important;
+  }
+
+  /* The revealed fighter stays in the arena; only the chooser's roster takes space. */
+  body.r75-layout.r67-mobile[data-r75-phase="battle"] #battle-phase .roster-console.r75-roster-waiting,
+  body.r75-layout.r67-mobile[data-r75-phase="battle"] #battle-phase .roster-console.r75-roster-locked {
+    display: none !important;
+  }
+}

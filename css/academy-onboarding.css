@@ -1,0 +1,439 @@
+/* SHINOBI ACADEMY V1 — responsive, isolated onboarding layer. */
+body.academy-open{overflow:hidden!important;overscroll-behavior:none}
+body.app-ui .academy-root, .academy-root{--ac-night:#09111c;--ac-line:rgba(143,188,225,.24);--ac-ink:#edf4fb;--ac-muted:#a9bdcf;--ac-cyan:#8de7ee;--ac-gold:#efc888;--ac-green:#83e9b8;position:fixed!important;inset:0!important;z-index:2147483000!important;isolation:isolate;display:flex;align-items:center;justify-content:center;padding:clamp(0px,1.6vh,20px);background:radial-gradient(ellipse at 22% 5%,rgba(32,80,109,.72),transparent 55%),radial-gradient(ellipse at 100% 100%,rgba(119,73,25,.2),transparent 55%),#05090f;color:var(--ac-ink);font:500 16px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;letter-spacing:normal;box-sizing:border-box;overflow:hidden}
+.academy-root *{box-sizing:border-box}
+.academy-root button{font-family:inherit!important;font-weight:800!important;line-height:1.25!important;letter-spacing:.015em!important;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent;min-height:44px;user-select:none}
+.academy-root button:disabled{cursor:default;opacity:.55}
+.academy-root button:focus-visible{outline:3px solid #adf2fb!important;outline-offset:3px!important}
+.academy-root img{display:block;max-width:100%}
+.academy-root .ac-ambient{pointer-events:none;position:absolute;inset:0;overflow:hidden}
+.academy-root .ac-ambient i{position:absolute;width:350px;height:350px;border-radius:50%;border:1px solid rgba(173,226,240,.08);left:calc(48% - 175px);top:-165px;box-shadow:0 0 90px rgba(33,132,157,.1),inset 0 0 60px rgba(33,132,157,.05);animation:ac-rotate 24s linear infinite}
+.academy-root .ac-ambient i:nth-child(2){width:500px;height:500px;left:auto;right:-210px;top:auto;bottom:-330px;animation-duration:37s;opacity:.65}
+.academy-root .ac-ambient i:nth-child(3){width:170px;height:170px;left:5%;top:60%;animation-duration:42s;opacity:.5}
+.academy-root .ac-shell{position:relative;z-index:1;display:flex;flex-direction:column;width:min(1200px,100%);height:min(860px,100%);min-height:0;min-width:0;background:linear-gradient(150deg,rgba(20,38,57,.98),rgba(8,16,29,.99) 75%);border:1px solid rgba(141,189,222,.34);border-radius:22px;box-shadow:0 20px 110px rgba(0,0,0,.7),inset 0 1px 0 rgba(224,250,255,.1);overflow:hidden}
+.academy-root .ac-shell::before{content:'';position:absolute;inset:0 0 auto;height:170px;pointer-events:none;background:linear-gradient(160deg,rgba(96,160,205,.09),transparent 72%)}
+.academy-root .ac-header{flex:0 0 auto;display:flex;justify-content:space-between;align-items:center;gap:15px;padding:17px clamp(14px,2.2vw,28px);border-bottom:1px solid var(--ac-line);position:relative;z-index:2}
+.academy-root .ac-brand{display:flex;align-items:center;gap:12px;min-width:0}
+.academy-root .ac-brand-mark{font:700 26px/1 Georgia,serif;color:var(--ac-gold);display:grid;place-items:center;width:48px;height:48px;border:1px solid rgba(239,200,136,.5);border-radius:13px;box-shadow:0 0 20px rgba(239,200,136,.09);background:radial-gradient(circle at center,rgba(239,200,136,.15),rgba(7,16,25,.7))}
+.academy-root .ac-brand div{display:grid;gap:1px}
+.academy-root .ac-brand small{color:var(--ac-cyan);font-size:12px;letter-spacing:.2em;font-weight:800}
+.academy-root .ac-brand strong{font-size:20px;letter-spacing:.045em;line-height:1.16}
+.academy-root .ac-header-right{display:flex;align-items:center;gap:14px;flex:0 0 auto}
+.academy-root .ac-chapter{font-size:13px;font-weight:900;color:var(--ac-gold);border:1px solid rgba(239,200,136,.29);background:rgba(239,200,136,.07);border-radius:999px;padding:8px 12px;white-space:nowrap}
+.academy-root .ac-header-exit{width:44px;height:44px;min-width:44px;padding:0;border-radius:12px;border:1px solid var(--ac-line);color:#dbe8f5;background:rgba(9,24,39,.84);font-size:29px!important;line-height:1!important}
+.academy-root .ac-header-exit:hover{border-color:var(--ac-cyan);background:rgba(54,104,132,.3)}
+.academy-root .ac-progress-track{position:relative;z-index:2;height:5px;min-height:5px;background:rgba(81,113,139,.22);flex:0 0 auto;overflow:hidden}
+.academy-root .ac-progress-track span{display:block;height:100%;background:linear-gradient(90deg,#5dbbc5,#a9edda,#efc888);box-shadow:0 0 20px rgba(145,231,232,.48);transition:width .36s ease}
+.academy-root .ac-progress-nav{position:relative;z-index:2;display:flex;justify-content:space-between;gap:7px;padding:11px clamp(14px,2.4vw,30px) 13px;border-bottom:1px solid var(--ac-line);flex:0 0 auto}
+.academy-root .ac-progress-nav span{flex:1 1 0;min-width:0;display:flex;align-items:center;gap:7px;white-space:nowrap;color:#738b9f;font-size:12px;font-weight:800}
+.academy-root .ac-progress-nav i{flex:0 0 auto;width:9px;height:9px;border-radius:50%;background:#52677d;border:1px solid #668296}
+.academy-root .ac-progress-nav em{font-style:normal;overflow:hidden;text-overflow:ellipsis}
+.academy-root .ac-progress-nav span.now{color:var(--ac-gold)}
+.academy-root .ac-progress-nav span.passed{color:var(--ac-green)}
+.academy-root .ac-progress-nav span.now i{background:var(--ac-gold);box-shadow:0 0 0 5px rgba(239,200,136,.15)}
+.academy-root .ac-progress-nav span.passed i{background:var(--ac-green);border-color:var(--ac-green)}
+.academy-root .ac-main{flex:1 1 auto;min-height:0;min-width:0;overflow:auto;overscroll-behavior:contain;display:grid;grid-template-columns:minmax(0,.78fr) minmax(0,1.22fr);gap:clamp(14px,2.7vw,38px);align-content:start;padding:clamp(16px,3vw,36px) clamp(14px,3vw,38px);scrollbar-color:rgba(128,169,197,.4) transparent;scrollbar-width:thin}
+.academy-root .ac-teaching{min-width:0;padding-top:5px}
+.academy-root .ac-kicker,.academy-root .ac-mark{display:inline-block;color:var(--ac-cyan);font-size:12px;font-weight:900;letter-spacing:.13em}
+.academy-root .ac-teaching h2{margin:14px 0 20px;font-size:clamp(25px,3.25vw,40px);line-height:1.1;letter-spacing:-.035em;color:#f2f6ff;font-weight:900;max-width:520px;text-wrap:balance}
+.academy-root .ac-intro{font-size:clamp(16px,1.55vw,19px);line-height:1.57;color:#d5e5ef;max-width:510px;margin:0 0 25px}
+.academy-root .ac-tip{display:flex;gap:11px;align-items:flex-start;padding:14px 14px 14px 13px;border:1px solid rgba(111,193,199,.24);border-radius:13px;background:rgba(29,76,86,.15);max-width:530px}
+.academy-root .ac-tip>span{flex:0 0 auto;display:grid;place-items:center;background:rgba(133,219,224,.14);border:1px solid rgba(133,219,224,.3);width:27px;height:27px;border-radius:8px;font:800 16px Georgia,serif;color:#c4f5f7}
+.academy-root .ac-tip p{margin:0;color:#accbd4;font-size:14px;line-height:1.52}
+.academy-root .ac-why{margin-top:18px;border-left:2px solid var(--ac-gold);padding:7px 0 7px 14px;color:#ecdac4;font-size:14px;line-height:1.5}
+.academy-root .ac-playground{position:relative;min-width:0;align-self:start}
+.academy-root .ac-training-board,.academy-root .ac-intro-scene,.academy-root .ac-complete-scene{min-width:0;position:relative;border:1px solid rgba(156,198,226,.32);border-radius:20px;background:radial-gradient(ellipse at 50% 0%,rgba(60,114,155,.16),transparent 66%),linear-gradient(145deg,rgba(19,38,56,.92),rgba(7,16,26,.97));box-shadow:inset 0 1px 0 rgba(224,251,255,.09),0 18px 46px rgba(0,0,0,.28);padding:clamp(15px,2.3vw,23px);overflow:hidden}
+.academy-root .ac-training-board::after,.academy-root .ac-intro-scene::after{content:'';position:absolute;pointer-events:none;right:-60px;top:-100px;width:260px;height:260px;border-radius:50%;border:1px solid rgba(167,225,244,.08)}
+.academy-root .ac-score-line{display:grid;grid-template-columns:1fr auto 1fr;gap:12px;align-items:center;margin:0 0 22px}
+.academy-root .ac-team{min-width:0;display:flex;flex-direction:column;gap:2px}
+.academy-root .ac-team small{font-size:11px;color:#90cfe9;font-weight:900;letter-spacing:.08em}
+.academy-root .ac-team strong{font-size:20px;color:#f5faff}
+.academy-root .ac-team.ac-enemy{text-align:right}
+.academy-root .ac-team.ac-enemy small{color:#efb990}
+.academy-root .ac-versus,.academy-root .ac-combat-vs{color:var(--ac-gold);font-size:21px;font-weight:1000;letter-spacing:.04em;text-shadow:0 0 24px rgba(244,168,86,.25)}
+.academy-root .ac-draft-surface{display:flex;align-items:center;gap:clamp(12px,2.5vw,23px)}
+.academy-root .ac-major-portrait{width:clamp(112px,17vw,172px);flex:0 0 auto}
+.academy-root .ac-portrait{position:relative;min-width:0;aspect-ratio:4/5.1;isolation:isolate;overflow:hidden;border-radius:15px;border:2px solid rgba(160,198,220,.6);background:linear-gradient(155deg,#1a354b,#071421);box-shadow:0 12px 32px rgba(0,0,0,.38),0 0 24px rgba(75,181,209,.12)}
+.academy-root .ac-portrait img{width:100%;height:100%;object-fit:cover;object-position:center 12%}
+.academy-root .ac-portrait-label{position:absolute;z-index:1;bottom:0;left:0;right:0;padding:24px 6px 7px;text-align:center;background:linear-gradient(transparent,rgba(5,13,20,.95));font-size:11px;font-weight:900;letter-spacing:.025em;color:#f7f5ea;text-shadow:0 1px 3px #000;line-height:1.2;overflow-wrap:anywhere}
+.academy-root .ac-draft-info{min-width:0;flex:1}
+.academy-root .ac-draft-info h3{font-size:clamp(17px,2vw,25px);line-height:1.16;margin:9px 0 10px;font-weight:900;overflow-wrap:anywhere}
+.academy-root .ac-draft-info p{font-size:14px;color:var(--ac-muted);margin:0 0 14px}
+.academy-root .ac-options{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:9px;margin-top:13px}
+.academy-root .ac-choice{display:flex;align-items:center;justify-content:center;gap:8px;min-width:0;padding:12px 9px;border-radius:11px;border:1px solid rgba(131,183,219,.33);background:#183249;color:#d5e8f5;text-align:center;font-size:13px!important;word-break:normal}
+.academy-root .ac-choice:hover:not(:disabled){background:#254863;border-color:#82bdde}
+.academy-root .ac-choice-primary{background:linear-gradient(110deg,#e3bb75,#a96b3a)!important;border-color:#ffdc9d!important;color:#10171d!important;box-shadow:0 7px 25px rgba(232,174,98,.16)}
+.academy-root .ac-choice-primary:hover:not(:disabled){filter:brightness(1.11)}
+.academy-root .ac-choice-icon{font-size:19px}
+.academy-root .ac-rule-strip{display:flex;flex-wrap:wrap;justify-content:center;gap:7px;margin-top:19px}
+.academy-root .ac-rule-strip span{padding:6px 9px;background:rgba(106,177,202,.1);border:1px solid rgba(106,177,202,.21);border-radius:6px;font-size:11px;font-weight:850;color:#a8d5e5;line-height:1.25}
+.academy-root .ac-verified{display:flex;align-items:center;gap:9px;margin-top:12px;padding:10px 12px;border:1px solid rgba(118,230,178,.42);border-radius:10px;background:rgba(31,102,71,.2);font-size:14px;font-weight:800;color:#b5f5d5}
+.academy-root .ac-verified>span{display:grid;place-items:center;width:23px;height:23px;border-radius:50%;color:#09241d;background:#90e7be}
+.academy-root .ac-intro-scene{display:grid;place-items:center;min-height:320px;overflow:hidden;background:radial-gradient(circle at 50% 45%,rgba(66,139,160,.28),transparent 59%),#0b1726}
+.academy-root .ac-seal{position:absolute;top:17%;left:calc(50% - 170px);font:800 250px/1 Georgia,serif;color:rgba(132,180,200,.08);transform:rotate(-15deg);pointer-events:none}
+.academy-root .ac-intro-card{position:relative;z-index:1;transform:rotate(-3deg);animation:ac-entrance .55s ease both}
+.academy-root .ac-intro-portrait{width:148px}
+.academy-root .ac-intro-stats{position:relative;z-index:2;display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:14px}
+.academy-root .ac-intro-stats span,.academy-root .ac-completed-grid span{padding:9px 12px;border:1px solid rgba(158,198,222,.31);border-radius:10px;background:rgba(11,29,47,.76);color:#c5d8e8;font-size:12px;line-height:1.3}
+.academy-root .ac-intro-stats b,.academy-root .ac-completed-grid b{font-size:17px;color:var(--ac-gold)}
+.academy-root .ac-bond-header{text-align:center;margin:0 0 18px;display:grid;gap:4px}
+.academy-root .ac-bond-header strong{font-size:23px;letter-spacing:.14em;color:#f4e4c2}
+.academy-root .ac-bond-header small{font-size:14px;color:#b6c7d6}
+.academy-root .ac-bond-pair{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:14px;align-items:center;max-width:480px;margin:auto}
+.academy-root .ac-bond-mark{font-size:30px;font-weight:900;color:var(--ac-gold)}
+.academy-root .ac-fighter-option{min-width:0;min-height:0!important;background:rgba(20,47,64,.8);border:1px solid rgba(132,186,213,.37);border-radius:14px;padding:10px;color:var(--ac-ink);display:flex;flex-direction:column;align-items:center;gap:6px;transition:transform .2s ease,border-color .2s ease}
+.academy-root .ac-fighter-option:not(:disabled):hover{transform:translateY(-3px);border-color:var(--ac-gold)}
+.academy-root .ac-fighter-option.ac-picked{border:2px solid var(--ac-green);box-shadow:0 0 0 3px rgba(118,227,175,.1)}
+.academy-root .ac-fighter-option .ac-portrait{width:min(100%,140px)}
+.academy-root .ac-fighter-option strong{display:block;font-size:13px;text-align:center;overflow-wrap:anywhere}
+.academy-root .ac-fighter-option small{display:block;color:var(--ac-gold);font-size:10px;font-weight:850;text-align:center}
+.academy-root .ac-bond-footer{text-align:center;margin-top:14px}
+.academy-root .ac-bond-chain{display:inline-block;color:var(--ac-green);font-size:13px;letter-spacing:.1em;font-weight:850;padding:6px 10px;border:1px solid rgba(118,231,175,.28);border-radius:8px}
+.academy-root .ac-bond-footer p{font-size:13px;color:#c1d1df;margin:10px 0 0}
+.academy-root .ac-scroll-path{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:10px;align-items:center}
+.academy-root .ac-scroll-item{min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:end;gap:9px;padding:15px 8px;min-height:270px;border:1px solid rgba(137,180,207,.29);background:rgba(13,34,50,.65);border-radius:13px;text-align:center}
+.academy-root .ac-scroll-item.ac-selected{border-color:rgba(127,230,184,.71);background:rgba(24,79,68,.28)}
+.academy-root .ac-scroll-icon{display:grid;place-items:center;width:75px;height:89px;font-size:42px;border-radius:17px;border:1px solid #a9cae2;background:radial-gradient(circle,#246080,#0c1f37);box-shadow:0 0 33px rgba(91,165,215,.23)}
+.academy-root .ac-scroll-item b{font-size:15px;color:#f3e4cc}
+.academy-root .ac-scroll-item small{font-size:12px;color:#aac1d1}
+.academy-root .ac-scroll-item button{width:100%;padding:9px 6px;border-radius:9px;border:1px solid #e6c188;background:linear-gradient(120deg,#e8c47d,#b48250);color:#101923;font-size:12px!important}
+.academy-root .ac-scroll-item button:disabled{color:#bdc9cc;background:#223847;border-color:#456272;opacity:1}
+.academy-root .ac-small-portrait{width:82px;max-width:100%}
+.academy-root .ac-scroll-arrow{font-size:30px;color:var(--ac-gold)}
+.academy-root .ac-arena-visual{min-height:260px;position:relative;overflow:hidden;border-radius:14px;border:1px solid rgba(186,219,233,.37);background:linear-gradient(140deg,#1d384d,#0b1c2b)}
+.academy-root .ac-arena-visual img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:saturate(.9)}
+.academy-root .ac-arena-visual.ac-rolling img{filter:blur(5px) saturate(1.3);transform:scale(1.05)}
+.academy-root .ac-arena-overlay{position:absolute;inset:auto 0 0;padding:46px 18px 20px;background:linear-gradient(transparent,rgba(2,10,18,.93));display:grid;gap:6px}
+.academy-root .ac-arena-overlay strong{font-size:clamp(18px,2vw,27px);color:#f2e5cb;line-height:1.12}
+.academy-root .ac-arena-overlay p{font-size:13px;color:#d5e1e9;margin:0}
+.academy-root .ac-battle-board .ac-options{margin-top:16px}
+.academy-root .ac-combat-side{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:12px;align-items:center}
+.academy-root .ac-combat-column{display:flex;flex-direction:column;align-items:center;gap:8px;min-width:0;text-align:center}
+.academy-root .ac-combat-column .ac-mark{font-size:10px;min-height:27px;align-content:center}
+.academy-root .ac-combat-portrait{width:min(100%,137px)}
+.academy-root .ac-combat-vs{font-size:31px}
+.academy-root .ac-battle-status{font-size:11px;font-weight:850;color:#c5e1ec;line-height:1.3;min-height:27px}
+.academy-root .ac-choice-label{text-align:center;margin:13px 0 9px;color:var(--ac-gold);font-size:12px;font-weight:850}
+.academy-root .ac-battle-choices{display:flex;justify-content:center;gap:13px;flex-wrap:wrap}
+.academy-root .ac-battle-choices button{display:flex;align-items:center;gap:8px;flex:0 1 200px;border:1px solid #8bbdc3;border-radius:10px;color:#edf7fd;padding:7px;background:#1d3c50;text-align:left;min-width:0}
+.academy-root .ac-battle-choices button:hover{border-color:var(--ac-gold);background:#2c5067}
+.academy-root .ac-battle-choices img{width:43px;height:46px;object-fit:cover;object-position:top;border-radius:6px}
+.academy-root .ac-battle-choices span{font-size:12px;overflow-wrap:anywhere}
+.academy-root .ac-battle-result{border:1px solid rgba(118,228,184,.4);background:rgba(17,79,61,.18);border-radius:12px;padding:13px;margin-top:16px}
+.academy-root .ac-battle-result strong{font-size:15px;color:#a6efd0}
+.academy-root .ac-battle-result p{font-size:13px;color:#c5d7da;margin:8px 0 0}
+.academy-root .ac-complete-scene{text-align:center;min-height:355px;display:flex;flex-direction:column;align-items:center;gap:11px;padding:30px 20px}
+.academy-root .ac-end-emblem{font:800 80px/1 Georgia,serif;color:var(--ac-gold);filter:drop-shadow(0 0 18px rgba(244,192,104,.26))}
+.academy-root .ac-complete-scene h3{font-size:25px;letter-spacing:.1em;color:#f8ebca;margin:0}
+.academy-root .ac-complete-scene p{max-width:430px;margin:0;color:#c0d4e0;font-size:15px}
+.academy-root .ac-completed-grid{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:10px 0}
+.academy-root .ac-complete-scene .ac-options{display:grid;grid-template-columns:1fr;width:min(100%,460px)}
+.academy-root .ac-feedback{visibility:hidden;min-height:0;max-height:0;overflow:hidden}
+.academy-root .ac-feedback.visible{visibility:visible;margin-top:12px;min-height:44px;max-height:160px;display:flex;align-items:center;justify-content:center;padding:9px 12px;border:1px solid rgba(144,216,231,.33);border-radius:10px;background:rgba(26,71,85,.19);color:#d9f3f4;font-size:14px;line-height:1.4;text-align:center}
+.academy-root .ac-footer{position:relative;z-index:2;flex:0 0 auto;display:flex;justify-content:space-between;align-items:center;gap:12px;padding:13px clamp(14px,2.4vw,28px);border-top:1px solid var(--ac-line);background:rgba(5,15,26,.89)}
+.academy-root .ac-footer-left{display:flex;gap:12px;align-items:center;min-width:0}
+.academy-root .ac-footer-left>span{font-size:11px;color:#a5bbcb;font-weight:750;letter-spacing:.04em}
+.academy-root .ac-footer button{border:1px solid rgba(122,173,207,.42);border-radius:10px;padding:12px 15px;background:rgba(36,66,91,.6);color:#e2effa;font-size:13px!important;white-space:normal}
+.academy-root .ac-footer button.ac-primary{border:1px solid #e6ba7e;background:linear-gradient(110deg,#f1cf91,#bc8c54);color:#17202a;font-weight:950!important;box-shadow:0 5px 20px rgba(212,161,81,.18);min-width:205px}
+.academy-root .ac-footer button:hover:not(:disabled){filter:brightness(1.13)}
+.academy-root .ac-footer-actions{display:flex;gap:9px;flex:0 0 auto}
+.academy-root .ac-bottom-exit{position:relative;z-index:2;text-align:center;flex:0 0 auto;background:rgba(5,15,26,.89);padding:0 15px 10px}
+.academy-root .ac-bottom-exit button{color:#a6bac8;min-height:30px;background:none;border:none;padding:4px 10px;text-decoration:underline;text-underline-offset:3px;font-size:11px!important;letter-spacing:0!important;font-weight:650!important}
+.academy-root .ac-bottom-exit button:hover{color:#f1d8ad}
+@keyframes ac-rotate{to{transform:rotate(360deg)}}
+@keyframes ac-entrance{from{opacity:0;transform:translateY(15px) rotate(-8deg) scale(.92)}to{opacity:1;transform:translateY(0) rotate(-3deg) scale(1)}}
+/* Landscape/tablet: the information and action remain two independent columns. */
+@media(max-width:900px){.academy-root .ac-main{grid-template-columns:minmax(0,.82fr) minmax(0,1.18fr);gap:17px;padding:18px}.academy-root .ac-teaching h2{font-size:26px}.academy-root .ac-intro{font-size:15px}.academy-root .ac-draft-surface{gap:11px}.academy-root .ac-major-portrait{width:110px}.academy-root .ac-draft-info h3{font-size:18px}.academy-root .ac-progress-nav em{font-size:11px}.academy-root .ac-fighter-option .ac-portrait{width:min(100%,105px)}}
+/* Mobile: content scrolls naturally; bottom action stays visible, 44px hit targets. */
+@media(max-width:700px){
+ body.app-ui .academy-root,.academy-root{padding:0!important;align-items:stretch}
+ .academy-root .ac-shell{height:100%;max-height:100%;width:100%;border-radius:0;border:0}
+ .academy-root .ac-header{padding:11px 12px;min-height:63px}
+ .academy-root .ac-brand{gap:9px}
+ .academy-root .ac-brand-mark{width:39px;height:39px;font-size:22px;border-radius:10px}
+ .academy-root .ac-brand small{font-size:10px;letter-spacing:.11em}
+ .academy-root .ac-brand strong{font-size:16px;letter-spacing:0}
+ .academy-root .ac-header-right{gap:7px}
+ .academy-root .ac-chapter{padding:6px 8px;font-size:11px}
+ .academy-root .ac-header-exit{width:42px;height:42px;min-width:42px}
+ .academy-root .ac-progress-nav{padding:9px 13px;gap:4px}
+ .academy-root .ac-progress-nav span{justify-content:center;flex:1}
+ .academy-root .ac-progress-nav i{width:10px;height:10px}
+ .academy-root .ac-progress-nav em{display:none}
+ .academy-root .ac-main{display:flex;flex-direction:column;gap:15px;padding:16px 13px 25px;align-content:initial}
+ .academy-root .ac-teaching{padding:0}
+ .academy-root .ac-kicker{font-size:11px}
+ .academy-root .ac-teaching h2{font-size:clamp(22px,5.7vw,28px);margin:7px 0 9px;line-height:1.16;max-width:100%}
+ .academy-root .ac-intro{font-size:15px;line-height:1.42;margin-bottom:12px}
+ .academy-root .ac-tip{padding:9px 10px;border-radius:10px}
+ .academy-root .ac-tip p{font-size:13px;line-height:1.4}
+ .academy-root .ac-tip>span{width:23px;height:23px}
+ .academy-root .ac-why{font-size:13px;margin-top:10px;padding-top:3px;padding-bottom:3px}
+ .academy-root .ac-training-board,.academy-root .ac-intro-scene,.academy-root .ac-complete-scene{padding:12px;border-radius:14px}
+ .academy-root .ac-score-line{margin-bottom:10px}
+ .academy-root .ac-team small{font-size:11px}
+ .academy-root .ac-team strong{font-size:18px}
+ .academy-root .ac-draft-surface{gap:12px;align-items:center}
+ .academy-root .ac-major-portrait{width:clamp(90px,27vw,125px)}
+ .academy-root .ac-draft-info h3{font-size:17px;margin:5px 0}
+ .academy-root .ac-draft-info p{font-size:13px;margin-bottom:5px}
+ .academy-root .ac-mark{font-size:10px;letter-spacing:.09em}
+ .academy-root .ac-options{gap:7px}
+ .academy-root .ac-choice{font-size:12px!important;padding:9px 7px;min-height:44px}
+ .academy-root .ac-choice-icon{font-size:16px}
+ .academy-root .ac-rule-strip{margin-top:12px;gap:4px}
+ .academy-root .ac-rule-strip span{font-size:10px;padding:5px 6px}
+ .academy-root .ac-portrait-label{font-size:10px}
+ .academy-root .ac-intro-scene{min-height:230px}
+ .academy-root .ac-intro-portrait{width:110px}
+ .academy-root .ac-intro-stats span{font-size:10px;padding:8px}
+ .academy-root .ac-bond-header{margin-bottom:9px}
+ .academy-root .ac-bond-header strong{font-size:18px}
+ .academy-root .ac-bond-header small{font-size:12px}
+ .academy-root .ac-bond-pair{gap:7px}
+ .academy-root .ac-fighter-option{padding:6px 4px;gap:4px}
+ .academy-root .ac-fighter-option .ac-portrait{width:min(100%,102px)}
+ .academy-root .ac-fighter-option strong{font-size:12px}
+ .academy-root .ac-fighter-option small{font-size:10px}
+ .academy-root .ac-bond-mark{font-size:22px}
+ .academy-root .ac-scroll-path{gap:7px}
+ .academy-root .ac-scroll-item{min-height:212px;padding:9px 5px;gap:6px}
+ .academy-root .ac-scroll-icon{width:57px;height:64px;font-size:30px}
+ .academy-root .ac-scroll-item b{font-size:12px}
+ .academy-root .ac-scroll-item small{font-size:11px}
+ .academy-root .ac-scroll-item button{font-size:11px!important}
+ .academy-root .ac-small-portrait{width:63px}
+ .academy-root .ac-scroll-arrow{font-size:19px}
+ .academy-root .ac-arena-visual{min-height:195px}
+ .academy-root .ac-arena-overlay{padding:35px 11px 10px}
+ .academy-root .ac-arena-overlay strong{font-size:18px}
+ .academy-root .ac-combat-side{gap:6px}
+ .academy-root .ac-combat-portrait{width:min(100%,105px)}
+ .academy-root .ac-combat-vs{font-size:22px}
+ .academy-root .ac-combat-column .ac-mark{font-size:9px;min-height:21px}
+ .academy-root .ac-battle-choices{gap:6px}
+ .academy-root .ac-battle-choices button{flex:1 1 130px}
+ .academy-root .ac-complete-scene{min-height:300px}
+ .academy-root .ac-end-emblem{font-size:64px}
+ .academy-root .ac-complete-scene h3{font-size:20px}
+ .academy-root .ac-complete-scene p{font-size:14px}
+ .academy-root .ac-footer{padding:9px 12px;gap:6px;min-height:62px}
+ .academy-root .ac-footer-left{gap:6px}
+ .academy-root .ac-footer-left>span{display:none}
+ .academy-root .ac-footer button{font-size:12px!important;padding:10px 10px}
+ .academy-root .ac-footer button.ac-primary{min-width:0}
+ .academy-root .ac-footer-actions{flex:1;justify-content:flex-end}
+ .academy-root .ac-bottom-exit{padding:0 10px max(7px,env(safe-area-inset-bottom))}
+ .academy-root .ac-bottom-exit button{font-size:11px!important;min-height:26px}
+}
+@media(max-width:350px){.academy-root .ac-brand strong{font-size:14px}.academy-root .ac-brand small{font-size:9px}.academy-root .ac-draft-surface{gap:8px}.academy-root .ac-major-portrait{width:90px}.academy-root .ac-rule-strip span{font-size:9px}.academy-root .ac-choice{font-size:11px!important;gap:3px}.academy-root .ac-tip p{font-size:12px}.academy-root .ac-teaching h2{font-size:22px}.academy-root .ac-footer button{font-size:11px!important}}
+@media(max-height:500px) and (min-width:700px){.academy-root .ac-header{padding:8px 15px}.academy-root .ac-brand-mark{height:36px;width:36px;font-size:20px}.academy-root .ac-progress-nav{padding:6px 18px}.academy-root .ac-main{padding:12px 22px}.academy-root .ac-tip{padding:9px}.academy-root .ac-teaching h2{font-size:24px;margin:7px 0}.academy-root .ac-intro{font-size:14px;margin-bottom:12px}.academy-root .ac-footer{padding:7px 16px}.academy-root .ac-bottom-exit{padding-bottom:5px}}
+@media(prefers-reduced-motion:reduce){.academy-root *,.academy-root *::before,.academy-root *::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+/* R34 advanced course legibility. Previously the tiny mobile coach could conceal instructions. */
+body.r67-mobile.r34-training-active .r33-coach-copy small{font-size:12px!important;line-height:1.3!important}
+body.r67-mobile.r34-training-active .r33-coach-copy strong{font-size:16px!important;line-height:1.3!important}
+body.r67-mobile.r34-training-active .r33-coach-copy p{display:block!important;max-height:none!important;overflow:visible!important;font-size:14px!important;line-height:1.5!important;margin:6px 0!important}
+body.r67-mobile.r34-training-active .r33-coach{max-height:none!important;overflow:visible!important;padding:12px!important;gap:9px!important}
+body.r67-mobile.r34-training-active .r33-coach-actions button{min-height:44px!important;height:auto!important;font-size:12px!important;padding:9px!important;white-space:normal!important}
+body.r67-mobile.r34-training-active .r33-coach-step{height:38px!important;width:38px!important;font-size:14px!important}
+body.r67-mobile.r34-training-active .r34-strategy span{font-size:12px!important;min-height:30px!important;padding:6px 9px!important}
+body.r34-training-active .r34-recommended::after{font-size:12px!important;line-height:1.15!important}
+/* Keep actionable cards above secondary explanation on narrow screens. */
+@media(max-width:700px){
+ .academy-root .ac-teaching{display:contents}
+ .academy-root .ac-teaching>.ac-kicker,
+ .academy-root .ac-teaching>h2,
+ .academy-root .ac-teaching>.ac-intro{order:0;margin-left:0;margin-right:0}
+ .academy-root .ac-playground{order:1;width:100%}
+ .academy-root .ac-teaching>.ac-tip{order:2;max-width:none;width:100%}
+ .academy-root .ac-teaching>.ac-why{order:3;margin:0 0 5px}
+ .academy-root .ac-main{gap:10px}
+ .academy-root .ac-teaching>h2{margin-top:-1px;margin-bottom:0}
+ .academy-root .ac-teaching>.ac-intro{margin-bottom:2px}
+}
+.academy-root .ac-training-board{animation:ac-panel-in .32s ease both}
+.academy-root .ac-bond-mark{animation:ac-energy 2.2s ease-in-out infinite}
+.academy-root .ac-combat-vs{text-shadow:0 0 24px rgba(239,200,136,.35);animation:ac-energy 2.4s ease-in-out infinite}
+.academy-root[data-done="yes"] .ac-verified,
+.academy-root[data-done="yes"] .ac-battle-result{animation:ac-achievement .45s ease both}
+.academy-root .ac-choice-primary{position:relative;overflow:hidden;isolation:isolate}
+.academy-root .ac-choice-primary:before{content:'';position:absolute;pointer-events:none;z-index:-1;top:-70%;bottom:-70%;width:38px;left:-90px;transform:rotate(23deg);background:rgba(255,255,255,.28);animation:ac-shine 4.8s linear infinite}
+@keyframes ac-panel-in{from{opacity:.5;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes ac-energy{50%{filter:brightness(1.25) drop-shadow(0 0 8px rgba(250,204,115,.45))}}
+@keyframes ac-achievement{0%{transform:scale(.96);opacity:0}100%{transform:scale(1);opacity:1}}
+@keyframes ac-shine{0%,67%{left:-90px}85%,100%{left:calc(100% + 90px)}}
+@media(prefers-reduced-motion:reduce){.academy-root .ac-training-board,.academy-root .ac-choice-primary:before{animation:none!important}}
+/* Actual click-to-roll prologue, shown before draft mechanics. */
+.academy-root .ac-prologue-grid{display:flex;gap:20px;align-items:center;justify-content:center;width:100%;position:relative;z-index:1;flex-wrap:wrap}
+.academy-root .ac-dice-panel{flex:1 1 205px;min-width:0;max-width:290px;display:grid;gap:12px;justify-items:center;padding:12px;background:rgba(10,28,44,.76);border:1px solid rgba(146,193,224,.29);border-radius:12px}
+.academy-root .ac-dice-result{display:flex;align-items:center;justify-content:center;gap:14px}
+.academy-root .ac-dice-result>div{min-width:65px;display:grid;justify-items:center;gap:6px}
+.academy-root .ac-dice-result small{font-size:12px;font-weight:800;color:#a8cfe0}
+.academy-root .ac-dice-result strong{display:grid;place-items:center;width:60px;height:65px;border-radius:12px;border:1px solid rgba(174,212,233,.4);background:rgba(28,62,84,.64);font-size:34px;color:#f5f1e6;box-shadow:0 6px 16px rgba(0,0,0,.3)}
+.academy-root .ac-dice-result>b{font-size:23px;color:var(--ac-gold)}
+.academy-root .ac-dice-panel .ac-options{width:100%;margin-top:2px}
+.academy-root .ac-dice-success{font-size:13px;font-weight:800;color:var(--ac-green);margin:0}
+@media(max-width:700px){.academy-root .ac-intro-scene{min-height:0}.academy-root .ac-prologue-grid{flex-wrap:nowrap;gap:10px}.academy-root .ac-intro-portrait{width:93px}.academy-root .ac-dice-panel{flex:1 1 150px;padding:8px;gap:8px}.academy-root .ac-dice-result{gap:8px}.academy-root .ac-dice-result>div{min-width:47px}.academy-root .ac-dice-result strong{width:47px;height:50px;font-size:26px}.academy-root .ac-dice-panel .ac-choice{font-size:11px!important}.academy-root .ac-intro-stats{gap:5px}.academy-root .ac-intro-stats span{font-size:10px}}
+/* Essential interactive labels stay legible; compact metadata may remain smaller. */
+.academy-root .ac-choice{font-size:14px!important}
+.academy-root .ac-fighter-option small{font-size:12px!important;line-height:1.28}
+.academy-root .ac-scroll-item button{font-size:13px!important}
+.academy-root .ac-battle-choices span{font-size:13px}
+@media(max-width:700px){
+ .academy-root .ac-choice{font-size:13px!important}
+ .academy-root .ac-fighter-option small{font-size:12px!important}
+ .academy-root .ac-dice-panel .ac-choice{font-size:13px!important}
+ .academy-root .ac-footer button{font-size:13px!important}
+ .academy-root .ac-draft-info p{font-size:14px}
+ .academy-root .ac-mark{font-size:11px}
+}
+@media(max-width:350px){.academy-root .ac-choice{font-size:12px!important}.academy-root .ac-footer button{font-size:12px!important}}
+
+/* On very short phones, offer an unmistakable path to controls beneath artwork. */
+.academy-root .ac-mobile-action-jump{display:none}
+@media(max-width:700px) and (max-height:650px){
+ .academy-root .ac-mobile-action-jump{display:block;order:0;width:100%;flex:0 0 auto;min-height:44px;border-radius:10px;border:1px solid rgba(239,200,136,.72);background:rgba(146,98,46,.24);color:#ffddaa;font-size:13px!important;font-weight:900;text-align:center;letter-spacing:.02em!important}
+ .academy-root .ac-teaching>.ac-intro{line-height:1.32}
+}
+
+/* V2 — persistent practice mission, real combat evidence and accessible controls. */
+.academy-root .ac-mission-hud{display:grid;grid-template-columns:1.05fr 1fr 1.4fr;gap:9px;flex:0 0 auto;padding:9px clamp(14px,3vw,37px);background:rgba(13,39,54,.93);border-bottom:1px solid rgba(153,202,225,.22)}
+.academy-root .ac-mission-hud>div{min-width:0;border:1px solid rgba(143,188,225,.16);background:rgba(3,12,25,.23);border-radius:9px;padding:7px 11px;display:flex;flex-direction:column;gap:3px}
+.academy-root .ac-mission-hud small{color:#a3c7d9;font-size:10px;letter-spacing:.07em;font-weight:850}
+.academy-root .ac-mission-hud strong{color:#f1e8d3;font-size:12px;font-weight:700;line-height:1.35;overflow-wrap:anywhere}
+.academy-root .ac-hud-fighter{display:inline-block;margin-right:8px}
+.academy-root .ac-hud-empty{color:#a9bac5}
+.academy-root .ac-fight-context{margin:10px 0;display:flex;gap:8px;flex-wrap:wrap}
+.academy-root .ac-fight-context span{border:1px solid rgba(130,203,179,.4);border-radius:9px;background:rgba(30,82,68,.27);padding:7px 9px;font-weight:750;font-size:12px;color:#d1f6e7}
+.academy-root .ac-battle-result{margin-top:12px}
+.academy-root .ac-result-facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:12px 0 0;text-align:left}
+.academy-root .ac-result-facts>div{border:1px solid rgba(143,188,225,.27);border-radius:9px;background:rgba(11,32,50,.65);padding:10px;display:flex;flex-direction:column;gap:5px;min-width:0}
+.academy-root .ac-result-facts b{font-size:10px;letter-spacing:.08em;color:#edc58d}
+.academy-root .ac-result-facts span{font-size:12px;line-height:1.45;color:#e2f0fa;overflow-wrap:anywhere}
+.academy-root .ac-result-facts>div:last-child{grid-column:1/-1}
+.academy-root .ac-reflection{margin-top:16px;padding:14px;border:1px solid rgba(237,197,130,.47);border-radius:13px;background:rgba(153,101,29,.14)}
+.academy-root .ac-reflection>strong{color:#f5d19b;font-size:12px;letter-spacing:.09em}
+.academy-root .ac-reflection>p{font-size:14px;color:#f3eee5;line-height:1.5;margin:7px 0}
+.academy-root .ac-reflection .ac-options{grid-template-columns:1fr;gap:7px}
+.academy-root .ac-reflection .ac-choice{min-height:46px;text-align:left}
+.academy-root .ac-next-course{border-left:3px solid #efc888;padding:7px 11px;background:rgba(239,200,136,.07)}
+@media(max-width:700px){
+ .academy-root .ac-mission-hud{grid-template-columns:1fr 1fr;padding:7px 10px;gap:5px}
+ .academy-root .ac-mission-hud>div{padding:6px 8px}
+ .academy-root .ac-mission-hud>div:last-child{grid-column:1/-1}
+ .academy-root .ac-mission-hud strong{font-size:11px;line-height:1.3}
+ .academy-root .ac-mission-hud small{font-size:9px}
+ .academy-root .ac-result-facts{grid-template-columns:1fr;gap:6px}
+ .academy-root .ac-result-facts>div:last-child{grid-column:auto}
+ .academy-root .ac-result-facts>div{padding:8px}
+ .academy-root .ac-fight-context span{font-size:11px}
+ .academy-root .ac-reflection{padding:11px}
+}
+/* Landscape on phones/tablets: show a reliable jump button. V1 hid it beyond 700px. */
+@media(max-height:520px) and (min-width:701px) and (max-width:1024px){
+ .academy-root .ac-header{padding-top:6px;padding-bottom:6px}
+ .academy-root .ac-brand-mark{height:32px;width:32px;font-size:17px}
+ .academy-root .ac-mission-hud{padding:4px 15px;gap:5px}
+ .academy-root .ac-mission-hud>div{padding:4px 7px}
+ .academy-root .ac-progress-nav{padding:4px 15px}
+ .academy-root .ac-footer{padding:5px 15px}
+ .academy-root .ac-main{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:9px;padding:8px 15px}
+ .academy-root .ac-teaching{grid-column:1;grid-row:1/3}
+ .academy-root .ac-mobile-action-jump{display:block;grid-column:2;grid-row:1;width:100%;min-height:40px;padding:7px;border-radius:9px;border:1px solid rgba(239,200,136,.72);color:#ffe4b3;background:rgba(146,98,46,.22)}
+ .academy-root .ac-playground{grid-column:2;grid-row:2}
+}
+@media(max-width:700px) and (max-height:650px){
+ .academy-root .ac-mission-hud{grid-template-columns:repeat(3,minmax(0,1fr));gap:4px}
+ .academy-root .ac-mission-hud>div:last-child{grid-column:auto}
+ .academy-root .ac-mission-hud strong{font-size:10px}
+ .academy-root .ac-mission-hud small{font-size:8px}
+}
+@media(prefers-reduced-motion:reduce){.academy-root .ac-rolling{animation:none!important}}
+/* Collapsible mission status prevents the persistent summary covering mobile gameplay. */
+.academy-root .ac-mission-hud{display:block}
+.academy-root .ac-hud-compact{display:none!important}
+.academy-root .ac-hud-details{display:grid;grid-template-columns:1.05fr 1fr 1.4fr;gap:9px}
+.academy-root .ac-hud-details>div{min-width:0;border:1px solid rgba(143,188,225,.16);background:rgba(3,12,25,.23);border-radius:9px;padding:7px 11px;display:flex;flex-direction:column;gap:3px}
+.academy-root .ac-hud-details small{color:#a3c7d9;font-size:10px;letter-spacing:.07em;font-weight:850}
+.academy-root .ac-hud-details strong{color:#f1e8d3;font-size:12px;font-weight:700;line-height:1.35;overflow-wrap:anywhere}
+@media(max-width:700px), (max-height:520px) and (max-width:1024px){
+ .academy-root .ac-mission-hud{padding:5px 10px}
+ .academy-root .ac-hud-compact{display:flex!important;align-items:center;justify-content:space-between;gap:7px;min-width:0;padding:0!important;background:transparent!important;border:0!important}
+ .academy-root .ac-hud-compact span{color:#d6e8e9;font-size:11px;font-weight:850;line-height:1.25}
+ .academy-root .ac-hud-compact button{flex:0 0 auto;font-size:10px!important;min-height:32px;padding:5px 8px;border:1px solid rgba(144,192,214,.36);border-radius:7px;background:rgba(24,59,82,.56);color:#ffdaa5}
+ .academy-root .ac-hud-details{display:none;grid-template-columns:1fr 1fr;margin-top:6px;gap:5px}
+ .academy-root .ac-mission-hud[data-expanded="yes"] .ac-hud-details{display:grid}
+ .academy-root .ac-hud-details>div{padding:6px 8px}
+ .academy-root .ac-hud-details>div:last-child{grid-column:1/-1}
+ .academy-root .ac-hud-details strong{font-size:11px}
+}
+@media(max-width:350px){.academy-root .ac-hud-compact span{font-size:10px}}
+@media(max-width:700px), (max-height:520px) and (max-width:1024px){
+ .academy-root .ac-mission-hud .ac-hud-compact{display:flex!important;flex-direction:row!important;align-items:center!important;justify-content:space-between!important;gap:8px!important;min-height:32px;border:0!important;background:transparent!important;padding:0!important}
+ .academy-root .ac-mission-hud .ac-hud-details{display:none!important}
+ .academy-root .ac-mission-hud[data-expanded="yes"] .ac-hud-details{display:grid!important}
+}
+
+/* ACADEMY V3 — full rule atlas and accessible tactical exercises */
+.academy-root .ac-header-guide,.academy-root .ac-guide-link{
+  color:#ffe0aa;background:rgba(119,80,30,.24);border:1px solid rgba(239,200,136,.55);
+  border-radius:10px;padding:9px 12px;font-size:12px!important;font-weight:900!important;
+}
+.academy-root .ac-header-guide:hover,.academy-root .ac-guide-link:hover{background:rgba(205,144,55,.2)}
+.academy-root .ac-guide-link{margin-top:13px;display:block;width:100%;}
+.academy-root .ac-guide-stats{display:flex;justify-content:center;flex-wrap:wrap;gap:7px;margin:12px 0}
+.academy-root .ac-guide-stats span{border:1px solid rgba(128,220,209,.4);background:rgba(32,78,77,.21);padding:7px;border-radius:8px;color:#c2f0ea;font-size:11px;font-weight:850}
+.academy-root .ac-library-block{width:100%;margin:16px 0 13px;padding:14px;border:1px solid rgba(133,193,225,.25);background:rgba(3,15,27,.64);border-radius:14px;min-width:0}
+.academy-root .ac-library-heading{display:grid;gap:4px;margin-bottom:12px}
+.academy-root .ac-library-heading strong{color:#f5dbab;font-size:15px;letter-spacing:.04em}
+.academy-root .ac-library-heading span{font-size:12px;color:#d2e4f1;line-height:1.4}
+.academy-root .ac-info-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.academy-root .ac-info-card{min-width:0;display:flex;flex-direction:column;gap:5px;border:1px solid rgba(153,195,213,.25);border-radius:10px;padding:11px;background:linear-gradient(150deg,rgba(31,66,82,.69),rgba(13,37,49,.84));overflow-wrap:anywhere}
+.academy-root .ac-info-card h4{font-size:14px;line-height:1.25;margin:0;color:#f6e6c6}
+.academy-root .ac-info-card p{font-size:12px;line-height:1.48;margin:2px 0;color:#dfedf4}
+.academy-root .ac-info-card small{font-size:11px;line-height:1.4;color:#9ce4df}
+.academy-root .ac-info-icon{font-size:28px;line-height:1.05;min-height:31px}
+.academy-root .ac-info-example{border-top:1px solid rgba(154,200,218,.2);padding-top:8px;color:#e7d4b2!important}
+.academy-root .ac-arena-grid{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+.academy-root .ac-arena-thumb{width:100%;height:90px;object-fit:cover;border-radius:8px;border:1px solid rgba(147,192,212,.35)}
+.academy-root .ac-caution{border-left:3px solid #ddb579;padding:9px 11px;margin:12px 0 0;font-size:12px;line-height:1.5;background:rgba(204,145,53,.1);color:#eee0c4}
+.academy-root .ac-inline-quiz{margin:15px 0 5px;border:1px solid rgba(232,187,104,.57);background:rgba(120,78,29,.2);padding:14px;border-radius:12px}
+.academy-root .ac-inline-quiz strong{font-size:13px;letter-spacing:.03em;color:#ffdfa4}
+.academy-root .ac-inline-quiz p{font-size:13px;color:#e5eef5;line-height:1.5}
+.academy-root .ac-inline-quiz .ac-choice{min-height:48px}
+.academy-root .ac-principle{background:rgba(68,105,82,.19);padding:12px;margin-top:14px;color:#c5f3dc;border:1px solid rgba(107,220,167,.38);font-size:13px;border-radius:10px;line-height:1.5}
+.academy-root .ac-battle-choices .ac-incorrect{border-color:rgba(220,167,134,.35);background:rgba(100,57,47,.28)}
+.academy-root .ac-battle-result{scroll-margin-top:16px;outline:none}
+.academy-root .ac-stage-results{margin-top:10px;padding-top:11px;border-top:1px solid rgba(150,210,184,.3)}
+.academy-root .ac-stage-results>b{font-size:12px;color:#f7e8bc}
+.academy-root .ac-stage-results p{color:#d9f1e7;margin:5px 0;font-size:12px;line-height:1.4}
+.academy-root .ac-guide-overlay{position:absolute;inset:0;z-index:15;background:rgba(1,7,14,.87);display:flex;align-items:center;justify-content:center;padding:15px;min-width:0;min-height:0}
+.academy-root .ac-guide-panel{display:flex;flex-direction:column;max-width:1000px;width:100%;height:min(730px,100%);min-height:0;min-width:0;border:1px solid rgba(193,226,230,.39);background:linear-gradient(150deg,#152a38,#071320);border-radius:17px;overflow:hidden;box-shadow:0 24px 66px rgba(0,0,0,.62)}
+.academy-root .ac-guide-header{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:15px 17px;border-bottom:1px solid rgba(159,201,222,.25)}
+.academy-root .ac-guide-header small{font-size:10px;letter-spacing:.1em;color:#9fe0d8;font-weight:850}
+.academy-root .ac-guide-header h2{margin:3px 0 0;font-size:22px;color:#f4e8d3}
+.academy-root .ac-guide-close{width:45px;height:45px;border:1px solid #91afc7;border-radius:10px;color:#f1f5f6;background:rgba(35,58,78,.7);font-size:26px!important;flex-shrink:0}
+.academy-root .ac-guide-tabs{flex-shrink:0;display:flex;gap:6px;padding:8px 13px;overflow-x:auto;overscroll-behavior-x:contain;border-bottom:1px solid rgba(159,201,222,.25)}
+.academy-root .ac-guide-tabs button{padding:8px 12px;border:1px solid rgba(154,196,219,.36);border-radius:9px;font-size:12px!important;color:#e0eaf1;background:rgba(28,58,76,.65);white-space:nowrap}
+.academy-root .ac-guide-tabs button[aria-current="page"]{color:#111f2d;background:#f0c989;border-color:#ffd9a0}
+.academy-root .ac-guide-body{overflow:auto;flex:1;min-height:0;min-width:0;padding:11px 16px 20px;overscroll-behavior:contain}
+.academy-root .ac-guide-body .ac-library-block{margin:0;box-shadow:none}
+.academy-root .ac-guide-footer{flex-shrink:0;display:flex;justify-content:space-between;align-items:center;gap:12px;padding:8px 15px;border-top:1px solid rgba(159,201,222,.25);font-size:11px;color:#bdcfdf}
+.academy-root .ac-guide-footer button{border:1px solid rgba(239,200,136,.75);background:rgba(163,113,46,.22);color:#ffdaac;padding:8px 11px;border-radius:9px;font-size:12px!important}
+.academy-root .ac-guide-search{width:100%;height:46px;border:1px solid #9ab9c8;border-radius:9px;background:#0b1b2a;color:#f1f8fc;padding:10px 12px;font-size:16px}
+.academy-root .ac-search-label{display:block;font-size:13px;color:#bde4e7;margin:10px 0 7px}
+.academy-root .ac-search-count{font-size:12px;color:#a7cfca}
+.academy-root .ac-card-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.academy-root .ac-card-list article{border:1px solid rgba(146,197,215,.3);border-radius:10px;padding:11px;background:rgba(22,50,67,.65);min-width:0;overflow-wrap:anywhere}
+.academy-root .ac-card-list article b{color:#f4dcb1;font-size:14px}
+.academy-root .ac-card-list article small{display:block;color:#b7dfe2;margin-top:3px;font-size:11px}
+.academy-root .ac-card-list article p{margin:6px 0;color:#e0ebf2;font-size:12px;line-height:1.5}
+.academy-root .ac-card-list article p strong{color:#ffd9a7}
+.academy-root .ac-status-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:7px}
+.academy-root .ac-status-grid>div{display:grid;gap:5px;border:1px solid rgba(143,190,204,.35);padding:12px 6px;border-radius:9px;text-align:center;background:rgba(34,63,78,.5)}
+.academy-root .ac-status-grid strong{color:#f3e6c8;font-size:13px}
+.academy-root .ac-status-grid span{color:#c2e3ee;font-size:12px}
+@media(max-width:850px){.academy-root .ac-guide-panel{height:100%}.academy-root .ac-guide-overlay{padding:7px}.academy-root .ac-info-grid{grid-template-columns:1fr}.academy-root .ac-arena-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.academy-root .ac-card-list{grid-template-columns:1fr}.academy-root .ac-status-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:700px){.academy-root .ac-header{gap:7px}.academy-root .ac-header-guide{padding:6px 7px;font-size:11px!important;max-width:96px;white-space:normal;line-height:1.1!important}.academy-root .ac-brand strong{font-size:14px}.academy-root .ac-header-right{gap:5px}.academy-root .ac-guide-header{padding:11px}.academy-root .ac-guide-header h2{font-size:17px}.academy-root .ac-guide-body{padding:8px}.academy-root .ac-info-card{padding:10px}.academy-root .ac-library-block{padding:10px}.academy-root .ac-guide-footer{font-size:10px}.academy-root .ac-guide-footer button{min-width:135px}.academy-root .ac-arena-grid{grid-template-columns:1fr 1fr}.academy-root .ac-arena-thumb{height:76px}.academy-root .ac-result-facts{gap:7px}.academy-root .ac-battle-choices button{min-height:55px}}
+@media(max-width:370px){.academy-root .ac-brand-mark{width:32px;height:32px;font-size:18px}.academy-root .ac-brand strong{font-size:13px}.academy-root .ac-chapter{font-size:10px;padding:5px}.academy-root .ac-header-guide{font-size:10px!important;max-width:80px}.academy-root .ac-arena-grid{grid-template-columns:1fr}.academy-root .ac-guide-footer{flex-direction:column;align-items:stretch}.academy-root .ac-info-card h4{font-size:13px}}
+@media(max-height:430px){.academy-root .ac-guide-overlay{padding:3px}.academy-root .ac-guide-header{padding:5px 11px}.academy-root .ac-guide-header h2{font-size:16px}.academy-root .ac-guide-tabs{padding:4px 10px}.academy-root .ac-guide-footer{padding:4px 9px}}
